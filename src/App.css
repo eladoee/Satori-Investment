@@ -5,8 +5,17 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: url('./SatoriHaadYaoAbove.jpg') no-repeat center center fixed; /* Background photo */
-  background-size: cover; /* Cover the entire background */
+  background: url('./SatoriHaadYaoAbove.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Ensure #root covers the full viewport */
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
 }
 
 /* Adding an overlay for better readability */
@@ -17,29 +26,21 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better visibility */
-  z-index: -1; /* Ensure it's behind the content */
-}
-
-/* Center the content */
-#root {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100vh;
-  position: relative; /* Ensure content is above the background */
+  background: rgba(0, 0, 0, 0.5); /* Darker overlay */
+  z-index: -1;
 }
 
 /* Content container with more transparency */
 .App {
-  background-color: rgba(255, 255, 255, 0.75);  /* White background with more transparency */
+  background-color: rgba(30, 30, 30, 0.85);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.3);  /* Subtle shadow */
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.6);
   max-width: 600px;
   width: 100%;
   text-align: center;
-  z-index: 1;  /* Ensure it's above the overlay */
+  z-index: 1;
+  color: #d3d3d3; /* Light gray text */
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -55,26 +56,132 @@ html, body {
   }
 }
 
-/* Bright and vivid header for contrast */
+/* General improvements to spacing and font for headers */
 h1 {
-  color: #2e4053; /* Soft gold for elegance */
+  color: #d3d3d3; /* Light gray for the header */
   font-weight: 600;
   letter-spacing: 1px;
 }
 
-/* Styling the labels and dropdowns */
+/* Styling the "General" section header */
+h4 {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #cfd8dc; /* Soft light blue-gray for headers */
+  font-weight: 600;
+}
+
+/* Modernize the input boxes */
+input[type="number"] {
+  padding: 5px; /* Smaller padding */
+  border: 2px solid #cfd8dc;
+  border-radius: 6px;
+  background-color: rgba(45, 45, 45, 0.8); /* Sleek dark background */
+  color: #d3d3d3; /* Light gray text */
+  font-size: 14px; /* Smaller font size */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 70px; /* Smaller width */
+  box-sizing: border-box;
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus {
+  border-color: #b0bec5;
+  box-shadow: 0 0 10px rgba(207, 216, 220, 0.4);
+  outline: none;
+}
+
+/* Occupancy input section with more space below */
+.occupancy-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+/* Container for the details */
+.details-container {
+  background-color: rgba(40, 40, 40, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #cfd8dc; /* Soft light blue-gray border */
+  box-shadow: 0px 3px 10px rgba(207, 216, 220, 0.2); /* Softer shadow */
+  margin-top: 20px;
+  width: 100%;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+  color: #d3d3d3; /* Light gray text */
+}
+
+/* Styling for individual detail sections */
+.details-box {
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(50, 50, 50, 0.95);
+  border: 1px solid #bbb; /* Softer border color */
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  font-size: 15px;
+}
+
+/* Styling for labels inside the detail boxes */
+.details-box strong {
+  color: #cfd8dc; /* Soft light blue-gray for text emphasis */
+  font-weight: 500;
+}
+
+.details-box span {
+  font-size: 15px;
+  color: #d3d3d3; /* Light gray for the text */
+}
+
+/* Add subtle hover effect */
+.details-box:hover {
+  background-color: rgba(60, 60, 60, 1);
+  border-color: #cfd8dc;
+  box-shadow: 0px 3px 12px rgba(207, 216, 220, 0.3); /* Subtle shadow */
+}
+
+/* Styling the clickable ROI values */
+.details-box.clickable-value {
+  cursor: pointer;
+  background-color: rgba(45, 45, 45, 1); /* Darker background for emphasis */
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease;
+  font-weight: bold; /* Make them stand out */
+  border: 1px solid #cfd8dc; /* Highlight clickable areas */
+  font-size: 18px; /* Increase size to make it more prominent */
+  padding: 12px; /* Add padding for emphasis */
+  color: #f5f5f5; /* Light color */
+  box-shadow: 0px 4px 12px rgba(207, 216, 220, 0.4); /* Subtle glow */
+}
+
+.details-box.clickable-value:hover {
+  background-color: rgba(65, 65, 65, 1);
+  border-color: #ffffff;
+  color: #ffffff; /* Stand out more on hover */
+  box-shadow: 0px 6px 18px rgba(255, 255, 255, 0.6); /* Stronger hover glow */
+  transform: scale(1.05); /* Slight scale up to make it pop */
+}
+
+/* Styling the labels */
 label {
   font-weight: 500;
   margin-right: 10px;
-  color: #2c3e50;
+  color: #d3d3d3; /* Light gray text */
 }
 
+/* Styling for dropdowns */
 select {
   padding: 12px;
-  border: 2px solid #00bcd4; /* Teal border */
+  border: 2px solid #cfd8dc; /* Soft light blue-gray */
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent dropdown */
-  color: #2c3e50;
+  background-color: rgba(45, 45, 45, 0.9);
+  color: #d3d3d3; /* Light gray */
   font-size: 16px;
   margin-top: 10px;
   transition: all 0.3s ease;
@@ -82,13 +189,13 @@ select {
 
 /* Hover effect for dropdowns */
 select:hover {
-  border-color: #ff6f61;  /* Soft coral hover effect */
+  border-color: #b0bec5; /* Slightly darker blue-gray */
 }
 
-/* Bright button with hover effect */
+/* Styling for buttons */
 button {
-  background-color: #00bcd4;  /* Bright teal */
-  color: #ffffff;
+  background-color: #cfd8dc; /* Soft light blue-gray */
+  color: #2c2c2c;
   padding: 12px 25px;
   border: none;
   border-radius: 6px;
@@ -97,33 +204,10 @@ button {
   font-size: 16px;
   font-weight: 600;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0px 4px 12px rgba(0, 188, 212, 0.3); /* Soft shadow for button */
+  box-shadow: 0px 4px 12px rgba(207, 216, 220, 0.4); /* Softer shadow for buttons */
 }
 
 button:hover {
-  background-color: #ff6f61;  /* Soft coral on hover */
-  box-shadow: 0px 6px 18px rgba(255, 111, 97, 0.5);
-}
-
-/* Align labels and dropdowns */
-.location-selection, .house-selection {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.location-selection label, .house-selection label {
-  margin-right: 10px;
-}
-
-.clickable-value {
-  cursor: pointer;
-  color: #00bcd4; /* Teal color to indicate interactivity */
-  transition: color 0.2s ease;
-}
-
-.clickable-value:hover {
-  color: #0288d1; /* Slightly darker teal on hover */
-  text-decoration: underline; /* Underline on hover for interactivity */
+  background-color: #b0bec5; /* Darker blue-gray on hover */
+  box-shadow: 0px 6px 18px rgba(207, 216, 220, 0.6); /* More intense hover shadow */
 }

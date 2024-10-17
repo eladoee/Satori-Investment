@@ -42,18 +42,18 @@ function App() {
     const houseNumber = parseInt(event.target.value, 10);
     const selectedLocationData = houseInventory.locations.find(loc => loc.locationName === selectedLocation);
     const house = selectedLocationData?.houses.find(h => h.unitNumber === houseNumber);
-  
+
     if (house) {
       setSelectedHouse(house);
-  
+
       // Find house type data from HouseTypes.json
       const houseTypeData = houseTypes.houses.find(houseType => houseType.type === house.type);
-  
+
       if (!houseTypeData) {
         console.error('House type not found for:', house.type);
         return;
       }
-  
+
       // Calculate initial data based on default occupancy rates
       setCalculatedData(calculateData(houseTypeData, highSeasonOccupancy, lowSeasonOccupancy));
     }
@@ -84,9 +84,10 @@ function App() {
   };
 
   const formatNumber = (value) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB' }).format(value);
+    const formattedValue = new Intl.NumberFormat('en-US', { style: 'decimal', maximumFractionDigits: 2 }).format(value);
+    return `${formattedValue} THB`; // Add the currency symbol to the right
   };
-  
+
   const formatPercentage = (value) => {
     return (value * 100).toFixed(3) + '%';
   };
@@ -99,7 +100,7 @@ function App() {
         <label htmlFor="location-select">Location: </label>
         <select id="location-select" onChange={handleLocationChange} value={selectedLocation}>
           <option value="">--Select a location--</option>
-          {houseInventory.locations.map(loc => (
+          {houseInventory.locations.map((loc) => (
             <option key={loc.locationName} value={loc.locationName}>
               {loc.locationName}
             </option>
@@ -112,7 +113,7 @@ function App() {
           <label htmlFor="house-select">House: </label>
           <select id="house-select" onChange={handleHouseChange} value={selectedHouse?.unitNumber || ''}>
             <option value="">--Select a house--</option>
-            {houses.map(house => (
+            {houses.map((house) => (
               <option key={house.unitNumber} value={house.unitNumber}>
                 {`House ${house.unitNumber}`}
               </option>
@@ -127,10 +128,44 @@ function App() {
           {showAlternateResults ? (
             <>
               <h2>{isShortTerm ? 'Short-Term ROI Calculation' : 'Long-Term ROI Calculation'} Details</h2>
-              
+
               {isShortTerm ? (
-                <div>
+                <div className="details-container">
                   <h3>Short-Term Calculations</h3>
+
+                  {/* High and Low Season Costs */}
+                  <div className="details-box">
+                    <strong>High Season Nightly Cost:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.pricing.high_season_avg_night_price)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Low Season Nightly Cost:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.pricing.low_season_avg_night_price)}</span>
+                  </div>
+
+                  {/* Short-Term Expenses */}
+                  <h4>Monthly Expenses</h4>
+                  <div className="details-box">
+                    <strong>Management:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.expenses.management)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Water:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.expenses.water)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Electricity:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.expenses.electricity)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Internet:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.expenses.internet)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Wear and Tear:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.expenses.wear_and_tear)}</span>
+                  </div>
+
                   {/* Occupancy inputs for short-term */}
                   <div className="occupancy-inputs">
                     <label>
@@ -157,47 +192,50 @@ function App() {
                     </label>
                   </div>
 
-                  <p><strong>Income:</strong></p>
-                  <ul>
-                    <li>High Season Nightly Cost: {formatNumber(calculatedData.houseTypeData.pricing.high_season_avg_night_price)}</li>
-                    <li>High Season Monthly Cost: {formatNumber(calculatedData.houseTypeData.pricing.high_season_avg_night_price * 30)}</li>
-                    <li>Low Season Nightly Cost: {formatNumber(calculatedData.houseTypeData.pricing.low_season_avg_night_price)}</li>
-                    <li>Low Season Monthly Cost: {formatNumber(calculatedData.houseTypeData.pricing.low_season_avg_night_price * 30)}</li>
-                  </ul>
-
-                  <p><strong>Monthly Expenses:</strong></p>
-                  <ul>
-                    <li>Management: {formatNumber(calculatedData.houseTypeData.expenses.management)}</li>
-                    <li>Water: {formatNumber(calculatedData.houseTypeData.expenses.water)}</li>
-                    <li>Electricity: {formatNumber(calculatedData.houseTypeData.expenses.electricity)}</li>
-                    <li>Internet: {formatNumber(calculatedData.houseTypeData.expenses.internet)}</li>
-                    <li>Wear and Tear: {formatNumber(calculatedData.houseTypeData.expenses.wear_and_tear)}</li>
-                    <li>Total: {formatNumber(calculatedData.shortTermMonthlyExpenses)}</li>
-                  </ul>
-      
-                  <p><strong>General:</strong></p>
-                  <ul>
-                    <li>Total Annual Income: {formatNumber(calculatedData.shortTermAnnualIncome)}</li>
-                    <li>Total Annual Expenses: {formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}</li>
-                    <li>Total Annual Profit: {formatNumber(calculatedData.shortTermAnnualProfit)}</li>
-                  </ul>
+                  {/* General Summary */}
+                  <h4>General</h4>
+                  <div className="details-box">
+                    <strong>Total Annual Income:</strong>
+                    <span>{formatNumber(calculatedData.shortTermAnnualIncome)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Total Annual Expenses:</strong>
+                    <span>{formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Total Annual Profit:</strong>
+                    <span>{formatNumber(calculatedData.shortTermAnnualProfit)}</span>
+                  </div>
                 </div>
               ) : (
-                <div>
+                <div className="details-container">
                   <h3>Long-Term Calculations</h3>
-                  <ul>
-                    <p><strong>Income:</strong></p>
-                    <li>High Season Monthly Price: {formatNumber(calculatedData.houseTypeData.pricing.high_season_monthly_price)}</li>
-                    <li>Low Season Monthly Price: {formatNumber(calculatedData.houseTypeData.pricing.low_season_monthly_price)}</li>
-                    
-                    <p><strong>Monthly Expenses:</strong></p>
-                    <li>Management: {formatNumber(calculatedData.houseTypeData.expenses.long_term_management)}</li>
 
-                    <p><strong>General:</strong></p>
-                    <li>Total Annual Income: {formatNumber(calculatedData.houseTypeData.pricing.high_season_monthly_price * 6 + calculatedData.houseTypeData.pricing.low_season_monthly_price * 6)}</li>
-                    <li>Total Annual Expenses: {formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}</li>
-                    <li>Total Annual Profit: {formatNumber(calculatedData.longTermAnnualProfit)}</li>
-                  </ul>
+                  <div className="details-box">
+                    <strong>High Season Monthly Price:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.pricing.high_season_monthly_price)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Low Season Monthly Price:</strong>
+                    <span>{formatNumber(calculatedData.houseTypeData.pricing.low_season_monthly_price)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Total Annual Income:</strong>
+                    <span>
+                      {formatNumber(
+                        calculatedData.houseTypeData.pricing.high_season_monthly_price * 6 +
+                          calculatedData.houseTypeData.pricing.low_season_monthly_price * 6
+                      )}
+                    </span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Total Annual Expenses:</strong>
+                    <span>{formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}</span>
+                  </div>
+                  <div className="details-box">
+                    <strong>Total Annual Profit:</strong>
+                    <span>{formatNumber(calculatedData.longTermAnnualProfit)}</span>
+                  </div>
                 </div>
               )}
 
@@ -206,19 +244,42 @@ function App() {
           ) : (
             <>
               <h2>Selected House: {`Unit ${selectedHouse.unitNumber}`}</h2>
-              <p>Type: {_.startCase(selectedHouse.type)}</p>
-              <p>Plot Area: {selectedHouse.plotArea_sqm} sqm</p>
-              <p>Usable Area: {selectedHouse.usableArea_gross_sqm} sqm</p>
-              <p>Bedrooms: {selectedHouse.bedrooms}</p>
-              <p>Floors: {selectedHouse.floors}</p>
-              <p>Price: {selectedHouse.price.toLocaleString()} THB</p>
 
-              <p className="clickable-value" onClick={() => handleSwitchScreen(true)}>
-                Short Term ROI: {formatNumber(calculatedData.shortTermAnnualProfit)} or {formatPercentage(calculatedData.shortTermAnnualProfit / selectedHouse.price)}
-              </p>
-              <p className="clickable-value" onClick={() => handleSwitchScreen(false)}>
-                Long Term ROI: {formatNumber(calculatedData.longTermAnnualProfit)} or {formatPercentage(calculatedData.longTermAnnualProfit / selectedHouse.price)}
-              </p>
+              {/* Basic details styled like alternate results */}
+              <div className="details-container">
+                <div className="details-box">
+                  <strong>Type:</strong>
+                  <span>{_.startCase(selectedHouse.type)}</span>
+                </div>
+                <div className="details-box">
+                  <strong>Plot Area:</strong>
+                  <span>{selectedHouse.plotArea_sqm} sqm</span>
+                </div>
+                <div className="details-box">
+                  <strong>Usable Area:</strong>
+                  <span>{selectedHouse.usableArea_gross_sqm} sqm</span>
+                </div>
+                <div className="details-box">
+                  <strong>Bedrooms:</strong>
+                  <span>{selectedHouse.bedrooms}</span>
+                </div>
+                <div className="details-box">
+                  <strong>Floors:</strong>
+                  <span>{selectedHouse.floors}</span>
+                </div>
+                <div className="details-box">
+                  <strong>Price:</strong>
+                  <span>{selectedHouse.price.toLocaleString()} THB</span>
+                </div>
+                <div className="details-box clickable-value" onClick={() => handleSwitchScreen(true)}>
+                  <strong>Short Term ROI:</strong>
+                  <span>{formatNumber(calculatedData.shortTermAnnualProfit)} or {formatPercentage(calculatedData.shortTermAnnualProfit / selectedHouse.price)}</span>
+                </div>
+                <div className="details-box clickable-value" onClick={() => handleSwitchScreen(false)}>
+                  <strong>Long Term ROI:</strong>
+                  <span>{formatNumber(calculatedData.longTermAnnualProfit)} or {formatPercentage(calculatedData.longTermAnnualProfit / selectedHouse.price)}</span>
+                </div>
+              </div>
             </>
           )}
         </div>
