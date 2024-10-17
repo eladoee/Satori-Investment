@@ -93,6 +93,7 @@ function App() {
   };
 
   return (
+        
     <div className="App">
       <h1>Satori Investment Options</h1>
 
