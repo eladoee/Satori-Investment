@@ -1,38 +1,129 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Full-page background with an aerial image */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url('./SatoriHaadYaoAbove.jpg') no-repeat center center fixed; /* Background photo */
+  background-size: cover; /* Cover the entire background */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Adding an overlay for better readability */
+#root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better visibility */
+  z-index: -1; /* Ensure it's behind the content */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Center the content */
+#root {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: flex-start;
+  height: 100vh;
+  position: relative; /* Ensure content is above the background */
 }
 
-.App-link {
-  color: #61dafb;
+/* Content container with more transparency */
+.App {
+  background-color: rgba(255, 255, 255, 0.75);  /* White background with more transparency */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.3);  /* Subtle shadow */
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  z-index: 1;  /* Ensure it's above the overlay */
+  animation: fadeIn 1s ease-in-out;
 }
 
-@keyframes App-logo-spin {
+/* Fading animation */
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(20px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* Bright and vivid header for contrast */
+h1 {
+  color: #2e4053; /* Soft gold for elegance */
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Styling the labels and dropdowns */
+label {
+  font-weight: 500;
+  margin-right: 10px;
+  color: #2c3e50;
+}
+
+select {
+  padding: 12px;
+  border: 2px solid #00bcd4; /* Teal border */
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent dropdown */
+  color: #2c3e50;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for dropdowns */
+select:hover {
+  border-color: #ff6f61;  /* Soft coral hover effect */
+}
+
+/* Bright button with hover effect */
+button {
+  background-color: #00bcd4;  /* Bright teal */
+  color: #ffffff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 12px rgba(0, 188, 212, 0.3); /* Soft shadow for button */
+}
+
+button:hover {
+  background-color: #ff6f61;  /* Soft coral on hover */
+  box-shadow: 0px 6px 18px rgba(255, 111, 97, 0.5);
+}
+
+/* Align labels and dropdowns */
+.location-selection, .house-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.location-selection label, .house-selection label {
+  margin-right: 10px;
+}
+
+.clickable-value {
+  cursor: pointer;
+  color: #00bcd4; /* Teal color to indicate interactivity */
+  transition: color 0.2s ease;
+}
+
+.clickable-value:hover {
+  color: #0288d1; /* Slightly darker teal on hover */
+  text-decoration: underline; /* Underline on hover for interactivity */
 }

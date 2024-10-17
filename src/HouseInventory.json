@@ -1,0 +1,122 @@
+{
+    "locations": [
+      {
+        "locationName": "Haad Yao",
+        "houses": [
+          {
+            "type": "beachfront",
+            "unitNumber": 1,
+            "plotArea_sqm": 915,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 544.5,
+            "floors": 1,
+            "price": 87000000
+          },
+          {
+            "type": "beachfront",
+            "unitNumber": 2,
+            "plotArea_sqm": 885,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 543.25,
+            "floors": 1,
+            "price": 87000000
+          },
+          {
+            "type": "beachfront_small",
+            "unitNumber": 3,
+            "plotArea_sqm": 688,
+            "bedrooms": 3,
+            "usableArea_gross_sqm": 437.6,
+            "floors": 1,
+            "price": 72000000
+          },
+          {
+            "type": "beachfront",
+            "unitNumber": 4,
+            "plotArea_sqm": 839,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 535.65,
+            "floors": 1,
+            "price": 87000000
+          },
+          {
+            "type": "beachfront",
+            "unitNumber": 5,
+            "plotArea_sqm": 863,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 533.5,
+            "floors": 1,
+            "price": 87000000
+          },
+          {
+            "type": "beachfront",
+            "unitNumber": 6,
+            "plotArea_sqm": 864,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 529.65,
+            "floors": 1,
+            "price": 97000000
+          },
+          {
+            "type": "back",
+            "unitNumber": 7,
+            "plotArea_sqm": 532,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 457.95,
+            "floors": 2,
+            "price": 67000000
+          },
+          {
+            "type": "back",
+            "unitNumber": 8,
+            "plotArea_sqm": 565,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 441.55,
+            "floors": 2,
+            "price": 67000000
+          },
+          {
+            "type": "back",
+            "unitNumber": 9,
+            "plotArea_sqm": 486,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 420.3,
+            "floors": 2,
+            "price": 67000000
+          },
+          {
+            "type": "back",
+            "unitNumber": 10,
+            "plotArea_sqm": 503,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 422.45,
+            "floors": 2,
+            "price": 67000000
+          },
+          {
+            "type": "back",
+            "unitNumber": 11,
+            "plotArea_sqm": 506,
+            "bedrooms": 5,
+            "usableArea_gross_sqm": 434.45,
+            "floors": 2,
+            "price": 77000000
+          }
+        ]
+      },
+      {
+        "locationName": "Uni Thong Sala",
+        "houses": [
+          {
+            "type": null,
+            "unitNumber": null,
+            "plotArea_sqm": null,
+            "bedrooms": null,
+            "usableArea_gross_sqm": null,
+            "floors": null,
+            "price": null
+          }
+        ]
+      }
+    ]
+  }
