@@ -1,58 +1,86 @@
 {
-    "houses": [
-      {
-        "type": "beachfront",
-        "pricing": {
-          "high_season_avg_night_price": 60000,
-          "low_season_avg_night_price": 40000,
-          "high_season_monthly_price": 1000000,
-          "low_season_monthly_price": 800000
+  "locations": [
+    {
+      "name": "haad yao",
+      "houses": [
+        {
+          "type": "beachfront",
+          "pricing": {
+            "high_season_avg_night_price": 60000,
+            "low_season_avg_night_price": 40000,
+            "high_season_monthly_price": 1000000,
+            "low_season_monthly_price": 800000
+          },
+          "expenses": {
+            "management": 399000,
+            "long_term_management": 250000,
+            "water": 100,
+            "electricity": 4000,
+            "internet": 1000,
+            "wear_and_tear": 6000,
+            "long_term_total": 250000
+          }
         },
-        "expenses": {
-          "management": 399000,
-          "long_term_management": 250000,
-          "water": 100,
-          "electricity": 4000,
-          "internet": 1000,
-          "wear_and_tear": 6000,
-          "long_term_total": 250000
-        }
-      },
-      {
-        "type": "beachfront_small",
-        "pricing": {
-          "high_season_avg_night_price": 36000,
-          "low_season_avg_night_price": 24000,
-          "high_season_monthly_price": 600000,
-          "low_season_monthly_price": 450000
+        {
+          "type": "beachfront_small",
+          "pricing": {
+            "high_season_avg_night_price": 36000,
+            "low_season_avg_night_price": 24000,
+            "high_season_monthly_price": 600000,
+            "low_season_monthly_price": 450000
+          },
+          "expenses": {
+            "management": 239400,
+            "long_term_management": 200000,
+            "water": 60,
+            "electricity": 2400,
+            "internet": 1000,
+            "wear_and_tear": 3600,
+            "long_term_total": 150000
+          }
         },
-        "expenses": {
-          "management": 239400,
-          "long_term_management": 200000,
-          "water": 60,
-          "electricity": 2400,
-          "internet": 1000,
-          "wear_and_tear": 3600,
-          "long_term_total": 150000
+        {
+          "type": "back",
+          "pricing": {
+            "high_season_avg_night_price": 50000,
+            "low_season_avg_night_price": 30000,
+            "high_season_monthly_price": 600000,
+            "low_season_monthly_price": 450000
+          },
+          "expenses": {
+            "management": 320250,
+            "long_term_management": 150000,
+            "water": 100,
+            "electricity": 4000,
+            "internet": 1000,
+            "wear_and_tear": 6000,
+            "long_term_total": 200000
+          }
         }
-      },
-      {
-        "type": "back",
-        "pricing": {
-          "high_season_avg_night_price": 50000,
-          "low_season_avg_night_price": 30000,
-          "high_season_monthly_price": 600000,
-          "low_season_monthly_price": 450000
-        },
-        "expenses": {
-          "management": 320250,
-          "long_term_management": 150000,
-          "water": 100,
-          "electricity": 4000,
-          "internet": 1000,
-          "wear_and_tear": 6000,
-          "long_term_total": 200000
+      ]
+    },
+    {
+      "name": "Wabi Sabi",
+      "houses" :[
+        {
+          "type": "beachfront",
+          "pricing": {
+            "high_season_avg_night_price": 60000,
+            "low_season_avg_night_price": 40000,
+            "high_season_monthly_price": 1000000,
+            "low_season_monthly_price": 800000
+          },
+          "expenses": {
+            "management": 399000,
+            "long_term_management": 250000,
+            "water": 100,
+            "electricity": 4000,
+            "internet": 1000,
+            "wear_and_tear": 6000,
+            "long_term_total": 250000
+          }
         }
-      }
-    ]
+      ]
+    }
+  ]
 }

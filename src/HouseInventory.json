@@ -117,6 +117,20 @@
             "price": null
           }
         ]
+      },
+      {
+        "locationName": "Wabi Sabi",
+        "houses": [
+          {
+            "type": "beachfront",
+            "unitNumber": 1,
+            "plotArea_sqm": null,
+            "bedrooms": 4,
+            "usableArea_gross_sqm": 188,
+            "floors": 2,
+            "price": 45000000
+          }
+        ]
       }
     ]
   }

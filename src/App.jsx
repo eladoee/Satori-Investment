@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import './App.css';
-import houseInventory from './HouseInventory.json';  // Importing the JSON file
+import houseInventory from './HouseInventory.json';
 import houseTypes from './HouseTypes.json';
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedHouse, setSelectedHouse] = useState(null);
   const [calculatedData, setCalculatedData] = useState({});
-  const [showAlternateResults, setShowAlternateResults] = useState(false);  // Track which screen to show
-  const [isShortTerm, setIsShortTerm] = useState(true);  // Track if it's short-term or long-term calculation
-  const [highSeasonOccupancy, setHighSeasonOccupancy] = useState(0.8);  // Default occupancy for high season
-  const [lowSeasonOccupancy, setLowSeasonOccupancy] = useState(0.7);    // Default occupancy for low season
+  const [showAlternateResults, setShowAlternateResults] = useState(false);
+  const [isShortTerm, setIsShortTerm] = useState(true);
+  const [highSeasonOccupancy, setHighSeasonOccupancy] = useState(0.8);
+  const [lowSeasonOccupancy, setLowSeasonOccupancy] = useState(0.7);
 
-  // Function to calculate data for short-term and long-term
   const calculateData = (houseTypeData, highOccupancy, lowOccupancy) => {
     const shortTermMonthlyExpenses = houseTypeData.expenses.management + houseTypeData.expenses.water + houseTypeData.expenses.electricity + houseTypeData.expenses.internet + houseTypeData.expenses.wear_and_tear;
     const shortTermIncome = (houseTypeData.pricing.high_season_avg_night_price * 30 * 6 * highOccupancy) + (houseTypeData.pricing.low_season_avg_night_price * 30 * 6 * lowOccupancy);
@@ -29,15 +28,13 @@ function App() {
     };
   };
 
-  // Handle location selection
   const handleLocationChange = (event) => {
     setSelectedLocation(event.target.value);
-    setSelectedHouse(null);  // Reset house selection when location changes
-    setCalculatedData({});   // Reset calculations
-    setShowAlternateResults(false);  // Reset to main results screen
+    setSelectedHouse(null);
+    setCalculatedData({});
+    setShowAlternateResults(false);
   };
 
-  // Handle house selection and perform calculations
   const handleHouseChange = (event) => {
     const houseNumber = parseInt(event.target.value, 10);
     const selectedLocationData = houseInventory.locations.find(loc => loc.locationName === selectedLocation);
@@ -46,7 +43,6 @@ function App() {
     if (house) {
       setSelectedHouse(house);
 
-      // Find house type data from HouseTypes.json
       const houseTypeData = houseTypes.houses.find(houseType => houseType.type === house.type);
 
       if (!houseTypeData) {
@@ -54,12 +50,10 @@ function App() {
         return;
       }
 
-      // Calculate initial data based on default occupancy rates
       setCalculatedData(calculateData(houseTypeData, highSeasonOccupancy, lowSeasonOccupancy));
     }
   };
 
-  // Update calculations when occupancy changes
   useEffect(() => {
     if (selectedHouse && calculatedData.houseTypeData) {
       const updatedData = calculateData(calculatedData.houseTypeData, highSeasonOccupancy, lowSeasonOccupancy);
@@ -67,25 +61,22 @@ function App() {
     }
   }, [highSeasonOccupancy, lowSeasonOccupancy, selectedHouse, calculatedData.houseTypeData]);  // Added necessary dependencies
 
-  // Fetch the houses for the selected location
   const houses = selectedLocation
     ? houseInventory.locations.find(loc => loc.locationName === selectedLocation).houses
     : [];
 
-  // Handle clicking on the calculated value labels to switch screens
   const handleSwitchScreen = (isShortTerm) => {
-    setShowAlternateResults(true);  // Show the second set of results
-    setIsShortTerm(isShortTerm);    // Determine whether it's short-term or long-term results
+    setShowAlternateResults(true);
+    setIsShortTerm(isShortTerm);
   };
 
-  // Handle going back to the original results screen
   const handleGoBack = () => {
-    setShowAlternateResults(false);  // Show the original results screen
+    setShowAlternateResults(false);
   };
 
   const formatNumber = (value) => {
     const formattedValue = new Intl.NumberFormat('en-US', { style: 'decimal', maximumFractionDigits: 2 }).format(value);
-    return `${formattedValue} THB`; // Add the currency symbol to the right
+    return `${formattedValue} THB`;
   };
 
   const formatPercentage = (value) => {
@@ -123,7 +114,6 @@ function App() {
         </div>
       )}
 
-      {/* Display the selected house data and calculations */}
       {selectedHouse && (
         <div>
           {showAlternateResults ? (
@@ -134,7 +124,6 @@ function App() {
                 <div className="details-container">
                   <h3>Short-Term Calculations</h3>
 
-                  {/* High and Low Season Costs */}
                   <div className="details-box">
                     <strong>High Season Nightly Cost:</strong>
                     <span>{formatNumber(calculatedData.houseTypeData.pricing.high_season_avg_night_price)}</span>
@@ -144,11 +133,10 @@ function App() {
                     <span>{formatNumber(calculatedData.houseTypeData.pricing.low_season_avg_night_price)}</span>
                   </div>
 
-                  {/* Short-Term Expenses */}
                   <h4>Monthly Expenses</h4>
                   <div className="details-box">
                     <strong>Management:</strong>
-                    <span>{formatNumber(calculatedData.houseTypeData.expenses.management)}</span>
+                    <span>{formatNumber(calculatedData.shortTermAnnualIncome * 0.35)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Water:</strong>
@@ -167,7 +155,6 @@ function App() {
                     <span>{formatNumber(calculatedData.houseTypeData.expenses.wear_and_tear)}</span>
                   </div>
 
-                  {/* Occupancy inputs for short-term */}
                   <div className="occupancy-inputs">
                     <label>
                       High Season Occupancy:
@@ -193,7 +180,6 @@ function App() {
                     </label>
                   </div>
 
-                  {/* General Summary */}
                   <h4>General</h4>
                   <div className="details-box">
                     <strong>Total Annual Income:</strong>
@@ -246,7 +232,6 @@ function App() {
             <>
               <h2>Selected House: {`Unit ${selectedHouse.unitNumber}`}</h2>
 
-              {/* Basic details styled like alternate results */}
               <div className="details-container">
                 <div className="details-box">
                   <strong>Type:</strong>
