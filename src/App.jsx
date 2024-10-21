@@ -37,13 +37,13 @@ function App() {
 
   const handleHouseChange = (event) => {
     const houseNumber = parseInt(event.target.value, 10);
-    const selectedLocationData = houseInventory.locations.find(loc => loc.locationName === selectedLocation);
+    const selectedLocationData = houseInventory.locations.find(location => location.locationName === selectedLocation);
     const house = selectedLocationData?.houses.find(h => h.unitNumber === houseNumber);
 
     if (house) {
       setSelectedHouse(house);
 
-      const houseTypeData = houseTypes.houses.find(houseType => houseType.type === house.type);
+      const houseTypeData = houseTypes.locations.find(location => location.name === selectedLocation).houses.find(houseType => houseType.type === house.type);
 
       if (!houseTypeData) {
         console.error('House type not found for:', house.type);
