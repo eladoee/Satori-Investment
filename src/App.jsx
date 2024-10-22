@@ -5,7 +5,6 @@ import houseInventory from './HouseInventory.json';
 import houseTypes from './HouseTypes.json';
 import SatoriHaadYaoAbove from './SatoriHaadYaoAbove.webp';
 import SatoriThongSalaUniAbove from './SatoriThongSalaUniAbove.jpg';
-import SatoriWabiSabiAbove from './SatoriWabiSabiAbove.jpg';
 import SatoriWabiSabi from './SatoriWabiSabi.jpg';
 
 function App() {
@@ -30,7 +29,7 @@ function App() {
         document.body.style.backgroundImage = `url(${SatoriWabiSabi})`;
         break;  
       default:
-        document.body.style.backgroundImage = 'url("./defaultBackground.jpg")'; // Your default background
+        document.body.style.backgroundImage = `url(${SatoriThongSalaUniAbove})`;
         break;
     }
     document.body.style.backgroundSize = 'cover';
