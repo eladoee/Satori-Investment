@@ -105,7 +105,7 @@
       ]
     },
     {
-      "locationName": "Uni Thong Sala",
+      "locationName": "Thong Sala Uni",
       "houses": [
         {
           "type": null,
@@ -127,7 +127,7 @@
           "plotArea_sqm": 500,
           "bedrooms": 4,
           "usableArea_gross_sqm": 188,
-          "floors": 2,
+          "floors": 1,
           "price": 45000000
         }
       ]

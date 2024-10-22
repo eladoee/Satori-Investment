@@ -1,12 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* Full-page background with an aerial image */
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: url('./SatoriHaadYaoAbove.webp') no-repeat center center fixed;
-  background-size: cover;
 }
 
 /* Ensure #root covers the full viewport */
@@ -18,29 +15,22 @@ html, body {
   position: relative;
 }
 
-/* Adding an overlay for better readability */
-#root::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Darker overlay */
-  z-index: -1;
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Content container with more transparency */
 .App {
-  background-color: rgba(30, 30, 30, 0.85);
+  background-color: rgba(30, 30, 30, 0.85); /* Semi-transparent to allow background visibility */
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.6);
   max-width: 600px;
   width: 100%;
   text-align: center;
-  z-index: 1;
-  color: #d3d3d3; /* Light gray text */
+  color: #d3d3d3;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -63,24 +53,21 @@ h1 {
   letter-spacing: 1px;
 }
 
-/* Styling the "General" section header */
-h4 {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #cfd8dc; /* Soft light blue-gray for headers */
-  font-weight: 600;
+h2, h3 {
+  color: #d3d3d3; /* Light gray */
+  font-weight: 500;
 }
 
-/* Modernize the input boxes */
+/* Styling for input fields */
 input[type="number"] {
-  padding: 5px; /* Smaller padding */
+  padding: 5px;
   border: 2px solid #cfd8dc;
   border-radius: 6px;
-  background-color: rgba(45, 45, 45, 0.8); /* Sleek dark background */
-  color: #d3d3d3; /* Light gray text */
-  font-size: 14px; /* Smaller font size */
+  background-color: rgba(45, 45, 45, 0.8);
+  color: #d3d3d3;
+  font-size: 14px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  width: 70px; /* Smaller width */
+  width: 70px;
   box-sizing: border-box;
 }
 

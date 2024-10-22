@@ -3,6 +3,10 @@ import _ from 'lodash';
 import './App.css';
 import houseInventory from './HouseInventory.json';
 import houseTypes from './HouseTypes.json';
+import SatoriHaadYaoAbove from './SatoriHaadYaoAbove.webp';
+import SatoriThongSalaUniAbove from './SatoriThongSalaUniAbove.jpg';
+import SatoriWabiSabiAbove from './SatoriWabiSabiAbove.jpg';
+import SatoriWabiSabi from './SatoriWabiSabi.jpg';
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -13,17 +17,45 @@ function App() {
   const [highSeasonOccupancy, setHighSeasonOccupancy] = useState(0.8);
   const [lowSeasonOccupancy, setLowSeasonOccupancy] = useState(0.7);
 
+  // Update background based on the selected location
+  useEffect(() => {
+    switch (selectedLocation) {
+      case 'Haad Yao':
+        document.body.style.backgroundImage = `url(${SatoriHaadYaoAbove})`;
+        break;
+      case 'Thong Sala Uni':
+        document.body.style.backgroundImage = `url(${SatoriThongSalaUniAbove})`;
+        break;
+      case 'Wabi Sabi':
+        document.body.style.backgroundImage = `url(${SatoriWabiSabi})`;
+        break;  
+      default:
+        document.body.style.backgroundImage = 'url("./defaultBackground.jpg")'; // Your default background
+        break;
+    }
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+  }, [selectedLocation]);
+
   const calculateData = (houseTypeData, highOccupancy, lowOccupancy) => {
-    const shortTermMonthlyExpenses = houseTypeData.expenses.management + houseTypeData.expenses.water + houseTypeData.expenses.electricity + houseTypeData.expenses.internet + houseTypeData.expenses.wear_and_tear;
+    const shortTermMonthlyDryExpenses = houseTypeData.expenses.water + houseTypeData.expenses.electricity + houseTypeData.expenses.internet + houseTypeData.expenses.wear_and_tear;
     const shortTermIncome = (houseTypeData.pricing.high_season_avg_night_price * 30 * 6 * highOccupancy) + (houseTypeData.pricing.low_season_avg_night_price * 30 * 6 * lowOccupancy);
+    const shortTermManagementFee = (shortTermIncome * 0.35) / 12
+    const shortTermMonthlyExpenses = shortTermMonthlyDryExpenses + shortTermManagementFee;
     const shortTermProfit = shortTermIncome - (shortTermMonthlyExpenses * 12);
-    const longTermProfit = (houseTypeData.pricing.high_season_monthly_price * 6) + (houseTypeData.pricing.low_season_monthly_price * 6) - (houseTypeData.expenses.long_term_management * 12);
+    const longTermIncome = (houseTypeData.pricing.high_season_monthly_price * 6) + (houseTypeData.pricing.low_season_monthly_price * 6)
+    const longTermMonthlyExpenses = (longTermIncome * 0.25) / 12;
+    const longTermProfit = longTermIncome - (longTermMonthlyExpenses * 12);
 
     return {
       houseTypeData: houseTypeData,
+      shortTermManagementFee: shortTermManagementFee,
       shortTermMonthlyExpenses: shortTermMonthlyExpenses,
       shortTermAnnualIncome: shortTermIncome,
       shortTermAnnualProfit: shortTermProfit,
+      longTermMonthlyExpenses: longTermMonthlyExpenses,
+      longTermAnnualIncome: longTermIncome,
       longTermAnnualProfit: longTermProfit
     };
   };
@@ -59,7 +91,7 @@ function App() {
       const updatedData = calculateData(calculatedData.houseTypeData, highSeasonOccupancy, lowSeasonOccupancy);
       setCalculatedData(updatedData);
     }
-  }, [highSeasonOccupancy, lowSeasonOccupancy, selectedHouse, calculatedData.houseTypeData]);  // Added necessary dependencies
+  }, [highSeasonOccupancy, lowSeasonOccupancy, selectedHouse, calculatedData.houseTypeData]);
 
   const houses = selectedLocation
     ? houseInventory.locations.find(loc => loc.locationName === selectedLocation).houses
@@ -84,7 +116,6 @@ function App() {
   };
 
   return (
-        
     <div className="App">
       <h1>Satori Investment Options</h1>
 
@@ -136,7 +167,7 @@ function App() {
                   <h4>Monthly Expenses</h4>
                   <div className="details-box">
                     <strong>Management:</strong>
-                    <span>{formatNumber(calculatedData.shortTermAnnualIncome * 0.35)}</span>
+                    <span>{formatNumber(calculatedData.shortTermManagementFee)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Water:</strong>
@@ -207,17 +238,16 @@ function App() {
                     <span>{formatNumber(calculatedData.houseTypeData.pricing.low_season_monthly_price)}</span>
                   </div>
                   <div className="details-box">
+                    <strong>Monthly Management Expenses:</strong>
+                    <span>{formatNumber(calculatedData.longTermMonthlyExpenses)}</span>
+                  </div>
+                  <div className="details-box">
                     <strong>Total Annual Income:</strong>
-                    <span>
-                      {formatNumber(
-                        calculatedData.houseTypeData.pricing.high_season_monthly_price * 6 +
-                          calculatedData.houseTypeData.pricing.low_season_monthly_price * 6
-                      )}
-                    </span>
+                    <span>{formatNumber(calculatedData.longTermAnnualIncome)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Expenses:</strong>
-                    <span>{formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}</span>
+                    <span>{formatNumber(calculatedData.longTermMonthlyExpenses * 12)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Profit:</strong>
@@ -258,11 +288,11 @@ function App() {
                   <span>{selectedHouse.price.toLocaleString()} THB</span>
                 </div>
                 <div className="details-box clickable-value" onClick={() => handleSwitchScreen(true)}>
-                  <strong>Short Term ROI:</strong>
+                  <strong>Short Term Annual ROI:</strong>
                   <span>{formatNumber(calculatedData.shortTermAnnualProfit)} or {formatPercentage(calculatedData.shortTermAnnualProfit / selectedHouse.price)}</span>
                 </div>
                 <div className="details-box clickable-value" onClick={() => handleSwitchScreen(false)}>
-                  <strong>Long Term ROI:</strong>
+                  <strong>Long Term Annual ROI:</strong>
                   <span>{formatNumber(calculatedData.longTermAnnualProfit)} or {formatPercentage(calculatedData.longTermAnnualProfit / selectedHouse.price)}</span>
                 </div>
               </div>

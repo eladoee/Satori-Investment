@@ -12,8 +12,6 @@
             "low_season_monthly_price": 800000
           },
           "expenses": {
-            "management": 399000,
-            "long_term_management": 250000,
             "water": 100,
             "electricity": 4000,
             "internet": 1000,
@@ -30,8 +28,6 @@
             "low_season_monthly_price": 450000
           },
           "expenses": {
-            "management": 239400,
-            "long_term_management": 200000,
             "water": 60,
             "electricity": 2400,
             "internet": 1000,
@@ -48,8 +44,6 @@
             "low_season_monthly_price": 450000
           },
           "expenses": {
-            "management": 320250,
-            "long_term_management": 150000,
             "water": 100,
             "electricity": 4000,
             "internet": 1000,
@@ -65,14 +59,12 @@
         {
           "type": "beachfront",
           "pricing": {
-            "high_season_avg_night_price": 60000,
-            "low_season_avg_night_price": 40000,
-            "high_season_monthly_price": 1000000,
-            "low_season_monthly_price": 800000
+            "high_season_avg_night_price": 35000,
+            "low_season_avg_night_price": 35000,
+            "high_season_monthly_price": 450000,
+            "low_season_monthly_price": 450000
           },
           "expenses": {
-            "management": 399000,
-            "long_term_management": 250000,
             "water": 100,
             "electricity": 4000,
             "internet": 1000,
