@@ -60,10 +60,18 @@ function App() {
   };
 
   const handleLocationChange = (event) => {
-    setSelectedLocation(event.target.value);
+    const locationName = event.target.value;
+    setSelectedLocation(locationName);
     setSelectedHouse(null);
     setCalculatedData({});
     setShowAlternateResults(false);
+    
+    // Find selected location data to set base occupancy
+    const locationData = houseInventory.locations.find(loc => loc.locationName === locationName);
+    if (locationData) {
+      setHighSeasonOccupancy(locationData.highSeasonOccupancy || 0.8);
+      setLowSeasonOccupancy(locationData.lowSeasonOccupancy || 0.7);
+    }
   };
 
   const handleHouseChange = (event) => {

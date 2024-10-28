@@ -2,6 +2,8 @@
   "locations": [
     {
       "locationName": "Haad Yao",
+      "highSeasonOccupancy": 0.8,
+      "lowSeasonOccupancy": 0.7,
       "houses": [
         {
           "type": "beachfront",
@@ -106,6 +108,8 @@
     },
     {
       "locationName": "Thong Sala Uni",
+      "highSeasonOccupancy": 0.8,
+      "lowSeasonOccupancy": 0.7,
       "houses": [
         {
           "type": null,
@@ -120,6 +124,8 @@
     },
     {
       "locationName": "Wabi Sabi",
+      "highSeasonOccupancy": 0.85,
+      "lowSeasonOccupancy": 0.73,
       "houses": [
         {
           "type": "beachfront",
