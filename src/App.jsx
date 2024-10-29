@@ -16,7 +16,6 @@ function App() {
   const [highSeasonOccupancy, setHighSeasonOccupancy] = useState(0.8);
   const [lowSeasonOccupancy, setLowSeasonOccupancy] = useState(0.7);
 
-  // Update background based on the selected location
   useEffect(() => {
     switch (selectedLocation) {
       case 'Haad Yao':
@@ -66,7 +65,6 @@ function App() {
     setCalculatedData({});
     setShowAlternateResults(false);
     
-    // Find selected location data to set base occupancy
     const locationData = houseInventory.locations.find(loc => loc.locationName === locationName);
     if (locationData) {
       setHighSeasonOccupancy(locationData.highSeasonOccupancy || 0.8);
