@@ -15,7 +15,7 @@ html, body {
 }
 
 body {
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   background-color: #EFEDE8; /* light background from the palette */
@@ -53,6 +53,10 @@ h1 {
 h2, h3 {
   color: #C6BB8D; /* same as h1 for consistency */
   font-weight: 500;
+}
+
+h4{
+  color: #C6BB8D; /* same as h1 for consistency */
 }
 
 input[type="number"] {
@@ -183,4 +187,43 @@ button {
 button:hover {
   background-color: #6F6C4A; /* darker shade on hover */
   box-shadow: 0px 6px 18px rgba(207, 216, 220, 0.6);
+}
+
+/* Ensure the SVG paths are invisible by default */
+.clickable-area {
+  fill: transparent; /* Invisible fill */
+  stroke: transparent; /* Soft white, transparent stroke */
+  stroke-width: 2px; /* Thicker stroke for the hover effect */
+  stroke-linejoin: round; /* Rounded corners for a smoother look */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  pointer-events: all; /* Allow interactions like hover and click */
+}
+
+/* On hover, make the SVG paths visible and create a soft aura effect */
+.clickable-area:hover {
+  fill: rgba(255, 255, 255, 0.3); /* Soft white fill with slight transparency */
+  stroke: rgba(255, 255, 255, 0.5); /* Slightly more visible white stroke on hover */
+  stroke-width: 3px; /* Slightly thicker border on hover */
+  stroke-linejoin: round; /* Keep the rounded edges */
+  cursor: pointer; /* Change the cursor to indicate it's clickable */
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Soft white glow (aura effect) */
+  z-index: 2; /* Ensure the hovered path appears on top */
+}
+
+/* Optional: For rounded corners */
+.clickable-area:hover {
+  stroke-linejoin: round; /* Rounded corners */
+  stroke-width: 3px; /* Slightly thicker stroke */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); /* Subtle glow effect */
+}
+
+/* Optional: Ensure the SVG paths are behind other content */
+.svg-overlay {
+  position: absolute; /* Position it over the entire app */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Prevent interfering with other UI elements */
+  z-index: 1; /* Ensure it's behind other elements like the details box */
 }
