@@ -50,13 +50,9 @@ h1 {
   letter-spacing: 1px;
 }
 
-h2, h3 {
+h2, h3, h4 {
   color: #C6BB8D; /* same as h1 for consistency */
   font-weight: 500;
-}
-
-h4{
-  color: #C6BB8D; /* same as h1 for consistency */
 }
 
 input[type="number"] {
@@ -226,4 +222,40 @@ button:hover {
   height: 100%;
   pointer-events: none; /* Prevent interfering with other UI elements */
   z-index: 1; /* Ensure it's behind other elements like the details box */
+}
+
+/* Ensure mobile responsiveness */
+@media (max-width: 768px) {
+  .App {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .location-selection {
+    width: 100%;
+    max-width: none;
+  }
+
+  .details-container {
+    padding: 10px;
+  }
+
+  .details-box {
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  input[type="number"] {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  select {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
