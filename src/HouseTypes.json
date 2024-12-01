@@ -22,8 +22,8 @@
         {
           "type": "beachfront_small",
           "pricing": {
-            "high_season_avg_night_price": 36000,
-            "low_season_avg_night_price": 24000,
+            "high_season_avg_night_price": 45000,
+            "low_season_avg_night_price": 33000,
             "high_season_monthly_price": 600000,
             "low_season_monthly_price": 450000
           },
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "name": "Wabi Sabi",
+      "name": "Hin Kong Beach",
       "houses" :[
         {
           "type": "beachfront",
