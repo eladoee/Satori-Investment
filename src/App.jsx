@@ -42,7 +42,7 @@ function App() {
         document.body.style.backgroundImage = `url(${SatoriThongSalaUniAbove})`;
         loadImage(SatoriThongSalaUniAbove);
         break;
-      case "Wabi Sabi":
+      case "Hin Kong Beach":
         document.body.style.backgroundImage = `url(${SatoriWabiSabi})`;
         loadImage(SatoriWabiSabi);
         break;
