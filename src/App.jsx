@@ -21,6 +21,15 @@ function App() {
     height: 0,
   });
 
+  // This state will store the dynamic prices:
+  const [customPrices, setCustomPrices] = useState({
+    housePrice: 0,
+    highSeasonNightlyPrice: 0,
+    lowSeasonNightlyPrice: 0,
+    highSeasonMonthlyPrice: 0,
+    lowSeasonMonthlyPrice: 0,
+  });
+
   useEffect(() => {
     const loadImage = (imageUrl) => {
       const img = new Image();
@@ -63,40 +72,50 @@ function App() {
     setLowSeasonOccupancy(locationData?.lowSeasonOccupancy || 0.7);
   }, [selectedLocation]);
 
-  const calculateData = (houseTypeData, highOccupancy, lowOccupancy) => {
+  // Updated calculateData function to accept dynamic pricing
+  const calculateData = (
+    houseTypeData,
+    highOccupancy,
+    lowOccupancy,
+    dynamicNightlyHigh,
+    dynamicNightlyLow,
+    dynamicMonthlyHigh,
+    dynamicMonthlyLow,
+    dynamicHousePrice
+  ) => {
+    // Monthly expenses that don't change even if nightly prices do
     const shortTermMonthlyDryExpenses =
       houseTypeData.expenses.water +
       houseTypeData.expenses.electricity +
       houseTypeData.expenses.internet +
       houseTypeData.expenses.wear_and_tear;
 
+    // Short term income (using dynamic nightly prices)
     const shortTermIncome =
-      houseTypeData.pricing.high_season_avg_night_price *
-        30 *
-        6 *
-        highOccupancy +
-      houseTypeData.pricing.low_season_avg_night_price * 30 * 6 * lowOccupancy;
+      dynamicNightlyHigh * 30 * 6 * highOccupancy +
+      dynamicNightlyLow * 30 * 6 * lowOccupancy;
 
     const shortTermManagementFee = (shortTermIncome * 0.35) / 12;
-    const shortTermMonthlyExpenses = shortTermMonthlyDryExpenses + shortTermManagementFee;
+    const shortTermMonthlyExpenses =
+      shortTermMonthlyDryExpenses + shortTermManagementFee;
     const shortTermProfit = shortTermIncome - shortTermMonthlyExpenses * 12;
 
-    const longTermIncome =
-      houseTypeData.pricing.high_season_monthly_price * 6 +
-      houseTypeData.pricing.low_season_monthly_price * 6;
-
+    // Long term income (using dynamic monthly prices)
+    const longTermIncome = dynamicMonthlyHigh * 6 + dynamicMonthlyLow * 6;
     const longTermMonthlyExpenses = (longTermIncome * 0.25) / 12;
     const longTermProfit = longTermIncome - longTermMonthlyExpenses * 12;
 
+    // Return all relevant calculations
     return {
       houseTypeData: houseTypeData,
-      shortTermManagementFee: shortTermManagementFee,
-      shortTermMonthlyExpenses: shortTermMonthlyExpenses,
+      shortTermManagementFee,
+      shortTermMonthlyExpenses,
       shortTermAnnualIncome: shortTermIncome,
       shortTermAnnualProfit: shortTermProfit,
-      longTermMonthlyExpenses: longTermMonthlyExpenses,
+      longTermMonthlyExpenses,
       longTermAnnualIncome: longTermIncome,
       longTermAnnualProfit: longTermProfit,
+      dynamicHousePrice,
     };
   };
 
@@ -113,7 +132,7 @@ function App() {
     if (house) {
       const houseTypeData = houseTypes.locations
         .find((location) => location.name === selectedLocation)
-        .houses.find((houseType) => houseType.type === house.type);
+        ?.houses.find((houseType) => houseType.type === house.type);
 
       if (!houseTypeData) {
         console.error("House type not found for:", house.type);
@@ -121,9 +140,29 @@ function App() {
       }
 
       setSelectedHouse(house);
-      setCalculatedData(
-        calculateData(houseTypeData, highSeasonOccupancy, lowSeasonOccupancy)
+
+      // Initialize customPrices with the house's base price and the relevant defaults
+      setCustomPrices({
+        housePrice: house.price,
+        highSeasonNightlyPrice: houseTypeData.pricing.high_season_avg_night_price,
+        lowSeasonNightlyPrice: houseTypeData.pricing.low_season_avg_night_price,
+        highSeasonMonthlyPrice: houseTypeData.pricing.high_season_monthly_price,
+        lowSeasonMonthlyPrice: houseTypeData.pricing.low_season_monthly_price,
+      });
+
+      // Immediately calculate with those defaults
+      const initialCalculated = calculateData(
+        houseTypeData,
+        highSeasonOccupancy,
+        lowSeasonOccupancy,
+        houseTypeData.pricing.high_season_avg_night_price,
+        houseTypeData.pricing.low_season_avg_night_price,
+        houseTypeData.pricing.high_season_monthly_price,
+        houseTypeData.pricing.low_season_monthly_price,
+        house.price
       );
+
+      setCalculatedData(initialCalculated);
     }
   };
 
@@ -145,12 +184,15 @@ function App() {
     const adjustedPath = path.replace(
       /([MC])([0-9.,\s]+)/g,
       (_, command, coords) => {
-        const points = coords.trim().split(/\s+/).map((pair) => {
-          const [x, y] = pair.split(",").map(parseFloat);
-          const adjustedX = (x - cropOffsetX) * scale;
-          const adjustedY = (y - cropOffsetY) * scale;
-          return `${adjustedX},${adjustedY}`;
-        });
+        const points = coords
+          .trim()
+          .split(/\s+/)
+          .map((pair) => {
+            const [x, y] = pair.split(",").map(parseFloat);
+            const adjustedX = (x - cropOffsetX) * scale;
+            const adjustedY = (y - cropOffsetY) * scale;
+            return `${adjustedX},${adjustedY}`;
+          });
 
         return `${command} ${points.join(" ")}`;
       }
@@ -159,18 +201,35 @@ function App() {
     return adjustedPath;
   };
 
+  // Whenever user changes occupancy or any custom price, recalculate
   useEffect(() => {
     if (selectedHouse) {
       const houseTypeData = houseTypes.locations
         .find((location) => location.name === selectedLocation)
-        .houses.find((houseType) => houseType.type === selectedHouse.type);
+        ?.houses.find((houseType) => houseType.type === selectedHouse.type);
 
       if (houseTypeData) {
-        const updatedData = calculateData(houseTypeData, highSeasonOccupancy, lowSeasonOccupancy);
+        const updatedData = calculateData(
+          houseTypeData,
+          highSeasonOccupancy,
+          lowSeasonOccupancy,
+          customPrices.highSeasonNightlyPrice,
+          customPrices.lowSeasonNightlyPrice,
+          customPrices.highSeasonMonthlyPrice,
+          customPrices.lowSeasonMonthlyPrice,
+          customPrices.housePrice
+        );
         setCalculatedData(updatedData);
       }
     }
-  }, [highSeasonOccupancy, lowSeasonOccupancy, selectedHouse,selectedLocation]);
+    // eslint-disable-next-line
+  }, [
+    highSeasonOccupancy,
+    lowSeasonOccupancy,
+    selectedHouse,
+    selectedLocation,
+    customPrices,
+  ]);
 
   const handleSwitchScreen = (isShortTerm) => {
     setShowAlternateResults(true);
@@ -187,7 +246,8 @@ function App() {
       maximumFractionDigits: 2,
     }).format(value);
 
-  const formatPercentage = (value) => (value * 100).toFixed(3) + "%";
+  const formatPercentage = (value) =>
+    (value * 100).toFixed(2) + "%"; // Slightly simplified for display
 
   return (
     <div className="App">
@@ -210,10 +270,7 @@ function App() {
       </div>
 
       {selectedLocation && !selectedHouse && (
-        <svg
-          className="svg-overlay"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="svg-overlay" xmlns="http://www.w3.org/2000/svg">
           {houses.map((house) => (
             <path
               key={house.unitNumber}
@@ -237,28 +294,36 @@ function App() {
                   <h3>Short-Term Calculations</h3>
                   <div className="details-box">
                     <strong>High Season Nightly Price:</strong>
-                    <span>
-                      {formatNumber(
-                        calculatedData.houseTypeData.pricing
-                          .high_season_avg_night_price
-                      )}
-                    </span>
+                    <input
+                      className="price-input"
+                      type="number"
+                      value={customPrices.highSeasonNightlyPrice}
+                      onChange={(e) =>
+                        setCustomPrices((prev) => ({
+                          ...prev,
+                          highSeasonNightlyPrice: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="details-box">
                     <strong>Low Season Nightly Price:</strong>
-                    <span>
-                      {formatNumber(
-                        calculatedData.houseTypeData.pricing
-                          .low_season_avg_night_price
-                      )}
-                    </span>
+                    <input
+                      className="price-input"
+                      type="number"
+                      value={customPrices.lowSeasonNightlyPrice}
+                      onChange={(e) =>
+                        setCustomPrices((prev) => ({
+                          ...prev,
+                          lowSeasonNightlyPrice: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                    />
                   </div>
                   <h4>Monthly Expenses</h4>
                   <div className="details-box">
-                    <strong>Management Fee:</strong>
-                    <span>
-                      {formatNumber(calculatedData.shortTermManagementFee)}
-                    </span>
+                    <strong>Management Fee (Monthly):</strong>
+                    <span>{formatNumber(calculatedData.shortTermManagementFee)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Water:</strong>
@@ -294,26 +359,28 @@ function App() {
                     <label>
                       High Season Occupancy:
                       <input
+                        class="occupancy-input"
                         type="number"
                         value={highSeasonOccupancy}
                         min="0"
                         max="1"
                         step="0.01"
                         onChange={(e) =>
-                          setHighSeasonOccupancy(parseFloat(e.target.value))
+                          setHighSeasonOccupancy(parseFloat(e.target.value) || 0)
                         }
                       />
                     </label>
                     <label>
                       Low Season Occupancy:
                       <input
+                        class="occupancy-input"
                         type="number"
                         value={lowSeasonOccupancy}
                         min="0"
                         max="1"
                         step="0.01"
                         onChange={(e) =>
-                          setLowSeasonOccupancy(parseFloat(e.target.value))
+                          setLowSeasonOccupancy(parseFloat(e.target.value) || 0)
                         }
                       />
                     </label>
@@ -321,23 +388,17 @@ function App() {
                   <h4>General</h4>
                   <div className="details-box">
                     <strong>Total Annual Income:</strong>
-                    <span>
-                      {formatNumber(calculatedData.shortTermAnnualIncome)}
-                    </span>
+                    <span>{formatNumber(calculatedData.shortTermAnnualIncome)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Expenses:</strong>
                     <span>
-                      {formatNumber(
-                        calculatedData.shortTermMonthlyExpenses * 12
-                      )}
+                      {formatNumber(calculatedData.shortTermMonthlyExpenses * 12)}
                     </span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Profit:</strong>
-                    <span>
-                      {formatNumber(calculatedData.shortTermAnnualProfit)}
-                    </span>
+                    <span>{formatNumber(calculatedData.shortTermAnnualProfit)}</span>
                   </div>
                 </div>
               ) : (
@@ -345,41 +406,45 @@ function App() {
                   <h3>Long-Term Calculations</h3>
                   <div className="details-box">
                     <strong>High Season Monthly Price:</strong>
-                    <span>
-                      {formatNumber(
-                        calculatedData.houseTypeData.pricing
-                          .high_season_monthly_price
-                      )}
-                    </span>
+                    <input
+                      className="price-input"
+                      type="number"
+                      value={customPrices.highSeasonMonthlyPrice}
+                      onChange={(e) =>
+                        setCustomPrices((prev) => ({
+                          ...prev,
+                          highSeasonMonthlyPrice: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="details-box">
                     <strong>Low Season Monthly Price:</strong>
-                    <span>
-                      {formatNumber(
-                        calculatedData.houseTypeData.pricing
-                          .low_season_monthly_price
-                      )}
-                    </span>
+                    <input
+                      className="price-input"
+                      type="number"
+                      value={customPrices.lowSeasonMonthlyPrice}
+                      onChange={(e) =>
+                        setCustomPrices((prev) => ({
+                          ...prev,
+                          lowSeasonMonthlyPrice: parseFloat(e.target.value) || 0,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Income:</strong>
-                    <span>
-                      {formatNumber(calculatedData.longTermAnnualIncome)}
-                    </span>
+                    <span>{formatNumber(calculatedData.longTermAnnualIncome)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Expenses:</strong>
                     <span>
-                      {formatNumber(
-                        calculatedData.longTermMonthlyExpenses * 12
-                      )}
+                      {formatNumber(calculatedData.longTermMonthlyExpenses * 12)}
                     </span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Profit:</strong>
-                    <span>
-                      {formatNumber(calculatedData.longTermAnnualProfit)}
-                    </span>
+                    <span>{formatNumber(calculatedData.longTermAnnualProfit)}</span>
                   </div>
                 </div>
               )}
@@ -409,21 +474,36 @@ function App() {
                   <strong>Floors:</strong>
                   <span>{selectedHouse.floors}</span>
                 </div>
+                {/* Main Price (dynamic) */}
                 <div className="details-box">
                   <strong>Price:</strong>
-                  <span>{selectedHouse.price.toLocaleString()} THB</span>
+                  <input
+                    className="price-input"
+                    type="number"
+                    value={customPrices.housePrice}
+                    onChange={(e) =>
+                      setCustomPrices((prev) => ({
+                        ...prev,
+                        housePrice: parseFloat(e.target.value) || 0,
+                      }))
+                    }
+                  />
                 </div>
+                {/* Short Term ROI and Long Term ROI */}
                 <div
                   className="details-box clickable-value"
                   onClick={() => handleSwitchScreen(true)}
                 >
                   <strong>Short Term Annual ROI:</strong>
                   <span>
+                    {/* shortTermAnnualProfit */}
                     {formatNumber(calculatedData.shortTermAnnualProfit)} or{" "}
-                    {formatPercentage(
-                      calculatedData.shortTermAnnualProfit /
-                        selectedHouse.price
-                    )}
+                    {customPrices.housePrice
+                      ? formatPercentage(
+                          calculatedData.shortTermAnnualProfit /
+                            customPrices.housePrice
+                        )
+                      : "0.00%"}
                   </span>
                 </div>
                 <div
@@ -433,10 +513,12 @@ function App() {
                   <strong>Long Term Annual ROI:</strong>
                   <span>
                     {formatNumber(calculatedData.longTermAnnualProfit)} or{" "}
-                    {formatPercentage(
-                      calculatedData.longTermAnnualProfit /
-                        selectedHouse.price
-                    )}
+                    {customPrices.housePrice
+                      ? formatPercentage(
+                          calculatedData.longTermAnnualProfit /
+                            customPrices.housePrice
+                        )
+                      : "0.00%"}
                   </span>
                 </div>
               </div>
