@@ -71,6 +71,22 @@
             "wear_and_tear": 6000,
             "long_term_total": 250000
           }
+        },
+        {
+          "type": "back",
+          "pricing": {
+            "high_season_avg_night_price": 25000,
+            "low_season_avg_night_price": 25000,
+            "high_season_monthly_price": 350000,
+            "low_season_monthly_price": 350000
+          },
+          "expenses": {
+            "water": 100,
+            "electricity": 4000,
+            "internet": 1000,
+            "wear_and_tear": 6000,
+            "long_term_total": 250000
+          }
         }
       ]
     }
