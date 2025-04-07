@@ -12,8 +12,8 @@
             "low_season_monthly_price": 800000
           },
           "expenses": {
-            "water": 100,
-            "electricity": 4000,
+            "water": 1500,
+            "electricity": 14000,
             "internet": 1000,
             "wear_and_tear": 6000,
             "long_term_total": 250000
@@ -28,8 +28,8 @@
             "low_season_monthly_price": 450000
           },
           "expenses": {
-            "water": 60,
-            "electricity": 2400,
+            "water": 1000,
+            "electricity": 11000,
             "internet": 1000,
             "wear_and_tear": 3600,
             "long_term_total": 150000
@@ -44,8 +44,8 @@
             "low_season_monthly_price": 450000
           },
           "expenses": {
-            "water": 100,
-            "electricity": 4000,
+            "water": 15000,
+            "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
             "long_term_total": 200000
@@ -65,8 +65,8 @@
             "low_season_monthly_price": 450000
           },
           "expenses": {
-            "water": 100,
-            "electricity": 4000,
+            "water": 1000,
+            "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
             "long_term_total": 250000
@@ -81,8 +81,8 @@
             "low_season_monthly_price": 350000
           },
           "expenses": {
-            "water": 100,
-            "electricity": 4000,
+            "water": 1000,
+            "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
             "long_term_total": 250000
