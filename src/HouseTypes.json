@@ -6,86 +6,86 @@
         {
           "type": "beachfront",
           "pricing": {
-            "high_season_avg_night_price": 60000,
-            "low_season_avg_night_price": 40000,
-            "high_season_monthly_price": 1000000,
-            "low_season_monthly_price": 800000
+            "high_season_avg_night_price": 72000,
+            "low_season_avg_night_price": 48000,
+            "high_season_monthly_price": 1200000,
+            "low_season_monthly_price": 960000
           },
           "expenses": {
             "water": 1500,
             "electricity": 14000,
             "internet": 1000,
             "wear_and_tear": 6000,
-            "long_term_total": 250000
+            "long_term_total": 300000
           }
         },
         {
           "type": "beachfront_small",
           "pricing": {
-            "high_season_avg_night_price": 45000,
-            "low_season_avg_night_price": 33000,
-            "high_season_monthly_price": 600000,
-            "low_season_monthly_price": 450000
+            "high_season_avg_night_price": 54000,
+            "low_season_avg_night_price": 39600,
+            "high_season_monthly_price": 720000,
+            "low_season_monthly_price": 540000
           },
           "expenses": {
             "water": 1000,
             "electricity": 11000,
             "internet": 1000,
             "wear_and_tear": 3600,
-            "long_term_total": 150000
+            "long_term_total": 180000
           }
         },
         {
           "type": "back",
           "pricing": {
-            "high_season_avg_night_price": 50000,
-            "low_season_avg_night_price": 30000,
-            "high_season_monthly_price": 600000,
-            "low_season_monthly_price": 450000
+            "high_season_avg_night_price": 60000,
+            "low_season_avg_night_price": 36000,
+            "high_season_monthly_price": 720000,
+            "low_season_monthly_price": 540000
           },
           "expenses": {
             "water": 15000,
             "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
-            "long_term_total": 200000
+            "long_term_total": 240000
           }
         }
       ]
     },
     {
       "name": "Hin Kong Beach",
-      "houses" :[
+      "houses": [
         {
           "type": "beachfront",
           "pricing": {
-            "high_season_avg_night_price": 35000,
-            "low_season_avg_night_price": 35000,
-            "high_season_monthly_price": 450000,
-            "low_season_monthly_price": 450000
+            "high_season_avg_night_price": 42000,
+            "low_season_avg_night_price": 42000,
+            "high_season_monthly_price": 540000,
+            "low_season_monthly_price": 540000
           },
           "expenses": {
             "water": 1000,
             "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
-            "long_term_total": 250000
+            "long_term_total": 300000
           }
         },
         {
           "type": "back",
           "pricing": {
-            "high_season_avg_night_price": 25000,
-            "low_season_avg_night_price": 25000,
-            "high_season_monthly_price": 350000,
-            "low_season_monthly_price": 350000
+            "high_season_avg_night_price": 30000,
+            "low_season_avg_night_price": 30000,
+            "high_season_monthly_price": 420000,
+            "low_season_monthly_price": 420000
           },
           "expenses": {
             "water": 1000,
             "electricity": 12000,
             "internet": 1000,
             "wear_and_tear": 6000,
-            "long_term_total": 250000
+            "long_term_total": 300000
           }
         }
       ]
