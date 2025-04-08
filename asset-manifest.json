@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/Satori-Investment/static/css/main.3a63ff09.css",
-    "main.js": "/Satori-Investment/static/js/main.f7338950.js",
+    "main.js": "/Satori-Investment/static/js/main.67364bc4.js",
     "static/media/SatoriWabiSabi.jpg": "/Satori-Investment/static/media/SatoriWabiSabi.23f8de16b37c4aaa8412.jpg",
     "static/media/SatoriThongSalaUniAbove.jpg": "/Satori-Investment/static/media/SatoriThongSalaUniAbove.654ee3c0c27d0f117aca.jpg",
     "static/media/SatoriHaadYaoAbove.webp": "/Satori-Investment/static/media/SatoriHaadYaoAbove.113f2f61eeecb0f9cfc6.webp",
     "index.html": "/Satori-Investment/index.html",
     "main.3a63ff09.css.map": "/Satori-Investment/static/css/main.3a63ff09.css.map",
-    "main.f7338950.js.map": "/Satori-Investment/static/js/main.f7338950.js.map"
+    "main.67364bc4.js.map": "/Satori-Investment/static/js/main.67364bc4.js.map"
   },
   "entrypoints": [
     "static/css/main.3a63ff09.css",
-    "static/js/main.f7338950.js"
+    "static/js/main.67364bc4.js"
   ]
 }
