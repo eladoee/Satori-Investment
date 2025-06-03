@@ -75,7 +75,7 @@
         {
           "type": "back",
           "pricing": {
-            "high_season_avg_night_price": 30000,
+            "high_season_avg_night_price": 40000,
             "low_season_avg_night_price": 30000,
             "high_season_monthly_price": 420000,
             "low_season_monthly_price": 420000
