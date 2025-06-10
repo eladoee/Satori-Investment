@@ -5,7 +5,7 @@ import houseInventory from "./HouseInventory.json";
 import houseTypes from "./HouseTypes.json";
 import SatoriHaadYaoAbove from "./SatoriHaadYaoAbove.webp";
 import SatoriThongSalaUniAbove from "./SatoriThongSalaUniAbove.jpg";
-import SatoriWabiSabi from "./SatoriWabiSabi.jpg";
+import SatoriHinKongVillas from "./SatoriHinKongVillas.jpg";
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -51,9 +51,9 @@ function App() {
         document.body.style.backgroundImage = `url(${SatoriThongSalaUniAbove})`;
         loadImage(SatoriThongSalaUniAbove);
         break;
-      case "Hin Kong Beach":
-        document.body.style.backgroundImage = `url(${SatoriWabiSabi})`;
-        loadImage(SatoriWabiSabi);
+      case "Hin Kong Villas":
+        document.body.style.backgroundImage = `url(${SatoriHinKongVillas})`;
+        loadImage(SatoriHinKongVillas);
         break;
       default:
         document.body.style.backgroundImage = `url(${SatoriThongSalaUniAbove})`;

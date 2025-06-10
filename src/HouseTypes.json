@@ -54,10 +54,10 @@
       ]
     },
     {
-      "name": "Hin Kong Beach",
+      "name": "Hin Kong Villas",
       "houses": [
         {
-          "type": "beachfront",
+          "type": "Beachfront",
           "pricing": {
             "high_season_avg_night_price": 42000,
             "low_season_avg_night_price": 42000,
@@ -73,12 +73,28 @@
           }
         },
         {
-          "type": "back",
+          "type": "2nd Line",
           "pricing": {
             "high_season_avg_night_price": 40000,
             "low_season_avg_night_price": 30000,
             "high_season_monthly_price": 420000,
             "low_season_monthly_price": 420000
+          },
+          "expenses": {
+            "water": 1000,
+            "electricity": 12000,
+            "internet": 1000,
+            "wear_and_tear": 6000,
+            "long_term_total": 300000
+          }
+        },
+        {
+          "type": "3rd Line",
+          "pricing": {
+            "high_season_avg_night_price": 35000,
+            "low_season_avg_night_price": 25000,
+            "high_season_monthly_price": 38000,
+            "low_season_monthly_price": 38000
           },
           "expenses": {
             "water": 1000,
