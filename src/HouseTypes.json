@@ -57,7 +57,7 @@
       "name": "Hin Kong Villas",
       "houses": [
         {
-          "type": "Beachfront",
+          "type": "1st Line",
           "pricing": {
             "high_season_avg_night_price": 42000,
             "low_season_avg_night_price": 42000,
