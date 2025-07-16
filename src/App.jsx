@@ -95,14 +95,14 @@ function App() {
       dynamicNightlyHigh * 30 * 6 * highOccupancy +
       dynamicNightlyLow * 30 * 6 * lowOccupancy;
 
-    const shortTermManagementFee = (shortTermIncome * 0.35) / 12;
+    const shortTermManagementFee = (shortTermIncome * 0.25) / 12;
     const shortTermMonthlyExpenses =
       shortTermMonthlyDryExpenses + shortTermManagementFee;
     const shortTermProfit = shortTermIncome - shortTermMonthlyExpenses * 12;
 
     // Long term income (using dynamic monthly prices)
     const longTermIncome = dynamicMonthlyHigh * 6 + dynamicMonthlyLow * 6;
-    const longTermMonthlyExpenses = (longTermIncome * 0.25) / 12;
+    const longTermMonthlyExpenses = (longTermIncome * 0.15) / 12;
     const longTermProfit = longTermIncome - longTermMonthlyExpenses * 12;
 
     // Return all relevant calculations
