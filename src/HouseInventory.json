@@ -4,6 +4,8 @@
       "locationName": "Haad Yao",
       "highSeasonOccupancy": 0.8,
       "lowSeasonOccupancy": 0.7,
+      "shortTermManagementFee": 0.25,
+      "longTermManagementFee": 0.15,
       "houses": [
         {
           "type": "beachfront",
@@ -121,6 +123,8 @@
       "locationName": "Hin Kong Villas",
       "highSeasonOccupancy": 0.85,
       "lowSeasonOccupancy": 0.73,
+      "shortTermManagementFee": 0.35,
+      "longTermManagementFee": 0.25,
       "houses": [
         {
           "type": "1st Line",

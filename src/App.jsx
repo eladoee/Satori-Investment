@@ -81,7 +81,9 @@ function App() {
     dynamicNightlyLow,
     dynamicMonthlyHigh,
     dynamicMonthlyLow,
-    dynamicHousePrice
+    dynamicHousePrice,
+    shortTermManagementFeeRate,
+    longTermManagementFeeRate
   ) => {
     // Monthly expenses that don't change even if nightly prices do
     const shortTermMonthlyDryExpenses =
@@ -95,14 +97,14 @@ function App() {
       dynamicNightlyHigh * 30 * 6 * highOccupancy +
       dynamicNightlyLow * 30 * 6 * lowOccupancy;
 
-    const shortTermManagementFee = (shortTermIncome * 0.25) / 12;
+    const shortTermManagementFee = (shortTermIncome * shortTermManagementFeeRate) / 12;
     const shortTermMonthlyExpenses =
       shortTermMonthlyDryExpenses + shortTermManagementFee;
     const shortTermProfit = shortTermIncome - shortTermMonthlyExpenses * 12;
 
     // Long term income (using dynamic monthly prices)
     const longTermIncome = dynamicMonthlyHigh * 6 + dynamicMonthlyLow * 6;
-    const longTermMonthlyExpenses = (longTermIncome * 0.15) / 12;
+    const longTermMonthlyExpenses = (longTermIncome * longTermManagementFeeRate) / 12;
     const longTermProfit = longTermIncome - longTermMonthlyExpenses * 12;
 
     // Return all relevant calculations
@@ -115,7 +117,7 @@ function App() {
       longTermMonthlyExpenses,
       longTermAnnualIncome: longTermIncome,
       longTermAnnualProfit: longTermProfit,
-      dynamicHousePrice,
+      dynamicHousePrice
     };
   };
 
@@ -128,6 +130,9 @@ function App() {
   };
 
   const handleHouseClick = (houseId) => {
+    const locationData = houseInventory.locations.find(
+      (loc) => loc.locationName === selectedLocation
+    );
     const house = houses.find((h) => h.unitNumber === houseId);
     if (house) {
       const houseTypeData = houseTypes.locations
@@ -159,7 +164,9 @@ function App() {
         houseTypeData.pricing.low_season_avg_night_price,
         houseTypeData.pricing.high_season_monthly_price,
         houseTypeData.pricing.low_season_monthly_price,
-        house.price
+        house.price,
+        locationData?.shortTermManagementFee || 0.2, // fallback default
+        locationData?.longTermManagementFee || 0.1
       );
 
       setCalculatedData(initialCalculated);
@@ -204,6 +211,9 @@ function App() {
   // Whenever user changes occupancy or any custom price, recalculate
   useEffect(() => {
     if (selectedHouse) {
+      const locationData = houseInventory.locations.find(
+  (loc) => loc.locationName === selectedLocation
+);
       const houseTypeData = houseTypes.locations
         .find((location) => location.name === selectedLocation)
         ?.houses.find((houseType) => houseType.type === selectedHouse.type);
@@ -217,7 +227,9 @@ function App() {
           customPrices.lowSeasonNightlyPrice,
           customPrices.highSeasonMonthlyPrice,
           customPrices.lowSeasonMonthlyPrice,
-          customPrices.housePrice
+          customPrices.housePrice,
+          locationData?.shortTermManagementFee || 0.2, // fallback default
+          locationData?.longTermManagementFee || 0.1
         );
         setCalculatedData(updatedData);
       }
@@ -431,6 +443,10 @@ function App() {
                         }))
                       }
                     />
+                  </div>
+                  <div className="details-box">
+                    <strong>Monthly Management Fee:</strong>
+                    <span>{formatNumber(calculatedData.longTermMonthlyExpenses)}</span>
                   </div>
                   <div className="details-box">
                     <strong>Total Annual Income:</strong>
