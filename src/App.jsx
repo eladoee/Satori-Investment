@@ -91,20 +91,21 @@ function App() {
       houseTypeData.expenses.electricity +
       houseTypeData.expenses.internet +
       houseTypeData.expenses.wear_and_tear;
+    const commonAreaManagementFee = 60000;
 
     // Short term income (using dynamic nightly prices)
     const shortTermIncome =
-      dynamicNightlyHigh * 30 * 6 * highOccupancy +
-      dynamicNightlyLow * 30 * 6 * lowOccupancy;
+      dynamicNightlyHigh * 30 * 7 * highOccupancy +
+      dynamicNightlyLow * 30 * 5 * lowOccupancy;
 
-    const shortTermManagementFee = (shortTermIncome * shortTermManagementFeeRate) / 12;
+    const shortTermManagementFee = ((shortTermIncome * shortTermManagementFeeRate) / 12) + commonAreaManagementFee;
     const shortTermMonthlyExpenses =
       shortTermMonthlyDryExpenses + shortTermManagementFee;
     const shortTermProfit = shortTermIncome - shortTermMonthlyExpenses * 12;
 
     // Long term income (using dynamic monthly prices)
-    const longTermIncome = dynamicMonthlyHigh * 6 + dynamicMonthlyLow * 6;
-    const longTermMonthlyExpenses = (longTermIncome * longTermManagementFeeRate) / 12;
+    const longTermIncome = dynamicMonthlyHigh * 7 + dynamicMonthlyLow * 5;
+    const longTermMonthlyExpenses = ((longTermIncome * longTermManagementFeeRate) / 12) + commonAreaManagementFee;
     const longTermProfit = longTermIncome - longTermMonthlyExpenses * 12;
 
     // Return all relevant calculations
