@@ -382,3 +382,78 @@ button:hover {
   .auth-card { padding: 22px 18px; border-radius: 14px; }
   .auth-title { font-size: 24px; }
 }
+
+/* ===== Auth screen (matches main box style) ===== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EFEDE8; /* app background */
+  font-family: 'Figtree', sans-serif;
+}
+
+.auth-box {
+  background: rgba(38, 45, 30, 0.92); /* dark translucent like main box */
+  border: 1px solid rgba(111, 108, 74, 0.35);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: min(520px, 92vw);
+  text-align: center;
+  color: #EFEDE8;
+  animation: auth-fadeUp 400ms ease-out;
+}
+
+.auth-title {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #C6BB8D;
+}
+
+.auth-subtitle {
+  margin: 0 0 20px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Loading screen */
+.auth-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  background: #EFEDE8;
+  color: #262D1E;
+  font-family: 'Figtree', sans-serif;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(111, 108, 74, 0.25);
+  border-top-color: #6699CC;
+  animation: spin 900ms linear infinite;
+}
+
+.loading-text {
+  font-size: 14px;
+  opacity: 0.85;
+  color: #6F6C4A;
+}
+
+@keyframes auth-fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

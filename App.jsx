@@ -1,57 +1,15 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import "./App.css";
+import { createRemoteJWKSet, jwtVerify } from "jose";
+import { GoogleLogin } from "@react-oauth/google";
 import houseInventory from "./HouseInventory.json";
 import houseTypes from "./HouseTypes.json";
 import SatoriHaadYaoAbove from "./SatoriHaadYaoAbove.webp";
 import SatoriThongSalaUniAbove from "./SatoriThongSalaUniAbove.jpg";
 import SatoriHinKongVillas from "./SatoriHinKongVillas.jpg";
-import { createRemoteJWKSet, jwtVerify } from "jose";
-import { GoogleLogin } from "@react-oauth/google";
-// ====== AUTH CONFIG (CRA) ======
-const ALLOWED_HD = "oee.ltd";
-const AUDIENCE = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
-const JWKS_URL = new URL("https://www.googleapis.com/oauth2/v3/certs");
 
-function useAuth() {
-  const [user, setUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
-  const JWKS = React.useMemo(() => createRemoteJWKSet(JWKS_URL), []);
-
-  React.useEffect(() => {
-    const raw = sessionStorage.getItem("satori_session");
-    if (raw) {
-      try { setUser(JSON.parse(raw)); } catch { sessionStorage.removeItem("satori_session"); }
-    }
-    setLoading(false);
-  }, []);
-
-  async function verifyIdToken(idToken) {
-    if (!AUDIENCE) throw new Error("Missing Google Client ID.");
-    const { payload } = await jwtVerify(idToken, JWKS, {
-      audience: AUDIENCE,
-      issuer: ["https://accounts.google.com", "accounts.google.com"],
-    });
-    if (payload.hd !== ALLOWED_HD) throw new Error(`Please use your @${ALLOWED_HD} account.`);
-    if (!payload.email_verified) throw new Error("Email not verified.");
-    return {
-      uid: payload.sub,
-      email: payload.email,
-      name: payload.name || "",
-      picture: payload.picture || "",
-    };
-  }
-
-  async function signIn(credential) {
-    const profile = await verifyIdToken(credential);
-    setUser(profile);
-    sessionStorage.setItem("satori_session", JSON.stringify(profile));
-  }
-
-  return { user, signIn, loading };
-}
-
-function AppInner() {
+function App() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedHouse, setSelectedHouse] = useState(null);
   const [calculatedData, setCalculatedData] = useState({});
@@ -590,53 +548,6 @@ function AppInner() {
       )}
     </div>
   );
-}
-
-
-function App() {
-  const { user, signIn, loading } = useAuth();
-
-  if (loading) {
-  return (
-    <div className="auth-loading">
-      <div className="spinner" />
-      <div className="loading-text">Loading…</div>
-    </div>
-  );
-}
-
-  if (!user) {
-  return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h1 className="auth-title">Satori ROI</h1>
-        <p className="auth-subtitle">
-          Sign in with your <b>@{ALLOWED_HD}</b> Google account to continue.
-        </p>
-        <div className="auth-actions">
-          <GoogleLogin
-            onSuccess={(res) => {
-              const idToken = res?.credential;
-              if (!idToken) { alert("No credential received from Google."); return; }
-              signIn(idToken).catch((e) => alert(e.message || "Login failed"));
-            }}
-            onError={() => alert("Google sign-in failed")}
-            useOneTap
-          />
-        </div>
-        {/* Optional separator + footer (you already have styles for these) */}
-        <div className="auth-sep" />
-        <div className="auth-footer">
-          <span>Protected access</span>
-          <span className="auth-dot">•</span>
-          <span>oee.ltd</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-  return <AppInner />;
 }
 
 export default App;
