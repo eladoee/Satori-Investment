@@ -1,0 +1,116 @@
+{
+  "locations": [
+    {
+      "locationId": "haad-yao",
+      "types": [
+        {
+          "typeId": "beachfront",
+          "displayName": "Beachfront",
+          "pricing": {
+            "highSeasonAvgNightPrice": 72000,
+            "lowSeasonAvgNightPrice": 48000,
+            "highSeasonMonthlyPrice": 1200000,
+            "lowSeasonMonthlyPrice": 960000
+          },
+          "expenses": {
+            "water": 1500,
+            "electricity": 14000,
+            "internet": 1000,
+            "wearAndTear": 6000,
+            "longTermTotal": 300000
+          }
+        },
+        {
+          "typeId": "beachfront-small",
+          "displayName": "Beachfront Small",
+          "pricing": {
+            "highSeasonAvgNightPrice": 54000,
+            "lowSeasonAvgNightPrice": 39600,
+            "highSeasonMonthlyPrice": 720000,
+            "lowSeasonMonthlyPrice": 540000
+          },
+          "expenses": {
+            "water": 1000,
+            "electricity": 11000,
+            "internet": 1000,
+            "wearAndTear": 3600,
+            "longTermTotal": 180000
+          }
+        },
+        {
+          "typeId": "back",
+          "displayName": "Back",
+          "pricing": {
+            "highSeasonAvgNightPrice": 60000,
+            "lowSeasonAvgNightPrice": 36000,
+            "highSeasonMonthlyPrice": 720000,
+            "lowSeasonMonthlyPrice": 540000
+          },
+          "expenses": {
+            "water": 15000,
+            "electricity": 12000,
+            "internet": 1000,
+            "wearAndTear": 6000,
+            "longTermTotal": 240000
+          }
+        }
+      ]
+    },
+    {
+      "locationId": "hin-kong-villas",
+      "types": [
+        {
+          "typeId": "first-line",
+          "displayName": "1st Line",
+          "pricing": {
+            "highSeasonAvgNightPrice": 42000,
+            "lowSeasonAvgNightPrice": 42000,
+            "highSeasonMonthlyPrice": 540000,
+            "lowSeasonMonthlyPrice": 540000
+          },
+          "expenses": {
+            "water": 1000,
+            "electricity": 12000,
+            "internet": 1000,
+            "wearAndTear": 6000,
+            "longTermTotal": 300000
+          }
+        },
+        {
+          "typeId": "second-line",
+          "displayName": "2nd Line",
+          "pricing": {
+            "highSeasonAvgNightPrice": 40000,
+            "lowSeasonAvgNightPrice": 30000,
+            "highSeasonMonthlyPrice": 420000,
+            "lowSeasonMonthlyPrice": 420000
+          },
+          "expenses": {
+            "water": 1000,
+            "electricity": 12000,
+            "internet": 1000,
+            "wearAndTear": 6000,
+            "longTermTotal": 300000
+          }
+        },
+        {
+          "typeId": "third-line",
+          "displayName": "3rd Line",
+          "pricing": {
+            "highSeasonAvgNightPrice": 35000,
+            "lowSeasonAvgNightPrice": 25000,
+            "highSeasonMonthlyPrice": 380000,
+            "lowSeasonMonthlyPrice": 380000
+          },
+          "expenses": {
+            "water": 1000,
+            "electricity": 12000,
+            "internet": 1000,
+            "wearAndTear": 6000,
+            "longTermTotal": 300000
+          }
+        }
+      ]
+    }
+  ]
+}

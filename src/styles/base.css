@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&display=swap');
+
+/* =========================
+   Design Tokens
+========================= */
+:root {
+  --font-main: 'Figtree', sans-serif;
+
+  --color-bg: #EFEDE8;
+  --color-surface: rgba(38, 45, 30, 0.85);
+  --color-surface-strong: rgba(38, 45, 30, 0.92);
+  --color-panel: rgba(40, 40, 40, 0.9);
+  --color-panel-strong: rgba(50, 50, 50, 0.95);
+  --color-panel-hover: rgba(60, 60, 60, 1);
+  --color-panel-clickable: rgba(45, 45, 45, 1);
+  --color-panel-clickable-hover: rgba(65, 65, 65, 1);
+
+  --color-text: #EFEDE8;
+  --color-text-dark: #262D1E;
+  --color-accent: #C6BB8D;
+  --color-accent-strong: #C6A87F;
+  --color-border: #6F6C4A;
+  --color-highlight: #6699CC;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-card: 0px 6px 18px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0px 3px 10px rgba(207, 216, 220, 0.2);
+  --shadow-button: 0px 4px 12px rgba(207, 216, 220, 0.4);
+  --shadow-button-hover: 0px 6px 18px rgba(207, 216, 220, 0.6);
+
+  --transition-fast: 0.3s ease;
+  --transition-auth: 420ms ease-out;
+}
+
+/* =========================
+   Base / Global
+========================= */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-main);
+}
+
+body {
+  background-color: var(--color-bg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+/* =========================
+   Main App Shell
+========================= */
+.App {
+  width: 100%;
+  max-width: 600px;
+  padding: 30px;
+  text-align: center;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   Typography
+========================= */
+.App h1 {
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.App h2,
+.App h3,
+.App h4 {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.App label {
+  margin-right: 10px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* =========================
+   Controls
+========================= */
+.App select,
+.App button,
+.occupancy-input,
+.price-input {
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  transition: all var(--transition-fast);
+}
+
+.App select {
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 16px;
+  color: var(--color-text);
+  background-color: rgba(45, 45, 45, 0.9);
+  border: 2px solid var(--color-accent);
+}
+
+.App select:hover {
+  border-color: var(--color-highlight);
+}
+
+.App button {
+  margin-top: 25px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-dark);
+  background-color: var(--color-accent-strong);
+  border: none;
+  box-shadow: var(--shadow-button);
+}
+
+.App button:hover {
+  background-color: var(--color-border);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.occupancy-input,
+.price-input {
+  padding: 5px;
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: rgba(38, 45, 30, 0.8);
+  border: 2px solid var(--color-border);
+}
+
+.occupancy-input {
+  width: 60px;
+}
+
+.price-input {
+  width: 100px;
+}
+
+.occupancy-input:hover,
+.occupancy-input:focus,
+.price-input:hover,
+.price-input:focus {
+  outline: none;
+  border-color: var(--color-highlight);
+  box-shadow: 0 0 10px rgba(102, 153, 204, 0.4);
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 768px) {
+  .App {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .App button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .App input[type='number'] {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .App select {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
