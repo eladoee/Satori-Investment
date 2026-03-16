@@ -123,8 +123,8 @@
       "locationName": "Hin Kong Villas",
       "highSeasonOccupancy": 0.85,
       "lowSeasonOccupancy": 0.73,
-      "shortTermManagementFee": 0.35,
-      "longTermManagementFee": 0.25,
+      "shortTermManagementFee": 0.25,
+      "longTermManagementFee": 0.15,
       "houses": [
         {
           "type": "1st Line",
