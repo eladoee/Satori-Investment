@@ -7,17 +7,10 @@ export const CURRENCY_OPTIONS = [
   { code: "ILS", label: "ILS ₪" },
 ];
 
-export const EXCHANGE_RATES = {
-  THB: 1,
-  EUR: 0.026,
-  USD: 0.029,
-  ILS: 0.107,
-};
+export function convertFromTHB(amount, currency, rates) {
+  if (!amount) return 0;
 
-export function convertFromTHB(amount, targetCurrency) {
-  if (amount == null || Number.isNaN(amount)) return 0;
-
-  const rate = EXCHANGE_RATES[targetCurrency] || 1;
+  const rate = rates?.[currency] || 1;
   return amount * rate;
 }
 

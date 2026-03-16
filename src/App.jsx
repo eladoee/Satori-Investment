@@ -21,6 +21,7 @@ import {
 } from "./utils/houseData";
 import { getLocationBackground } from "./utils/backgrounds";
 import { convertFromTHB } from "./utils/currency";
+import { fetchExchangeRates } from "./utils/exchangeRates";
 
 import LocationSelector from "./components/LocationSelector";
 import CurrencySelector from "./components/CurrencySelector";
@@ -47,6 +48,12 @@ function AppInner() {
     height: 0,
   });
   const [customPrices, setCustomPrices] = useState({ ...EMPTY_CUSTOM_PRICES });
+  const [exchangeRates, setExchangeRates] = useState({
+  THB: 1,
+  EUR: 0.026,
+  USD: 0.029,
+  ILS: 0.107,
+});
 
   const selectedLocationData = useMemo(() => {
     return getSelectedLocationData(houseInventory, selectedLocationId);
@@ -92,6 +99,7 @@ function AppInner() {
     const backgroundImage = getLocationBackground(
       selectedLocationData?.displayName
     );
+  
 
     document.body.style.backgroundImage = `url(${backgroundImage})`;
     document.body.style.backgroundSize = "cover";
@@ -118,6 +126,10 @@ function AppInner() {
     );
   }, [selectedLocationData]);
 
+  useEffect(() => {
+    fetchExchangeRates().then(setExchangeRates);
+  }, []);
+
   const updateCustomPrice = (field, value) => {
     setCustomPrices((prev) => ({
       ...prev,
@@ -126,7 +138,7 @@ function AppInner() {
   };
 
   const convertMoney = (amount) => {
-    return convertFromTHB(amount, selectedCurrency);
+    return convertFromTHB(amount, selectedCurrency, exchangeRates);
   };
 
   const resetSelectionState = () => {
