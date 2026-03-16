@@ -382,3 +382,37 @@ button:hover {
   .auth-card { padding: 22px 18px; border-radius: 14px; }
   .auth-title { font-size: 24px; }
 }
+
+/* ===== Hero layout adjustments for responsive map ===== */
+.map-area {
+  margin: 24px auto;
+  width: 100%;
+  max-width: 1600px;
+}
+
+.map-wrap.fullbleed {
+  width: 100%;
+}
+
+.svg-map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hotspot-outline {
+  fill: rgba(102, 153, 204, 0.18);
+  stroke: rgba(102, 153, 204, 0.8);
+  stroke-width: 2;
+}
+
+.hotspot-hit {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 40; /* thicker hit area for touch */
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+/* Position popup near centroid of polygon (optional) */
+/* Add classes for popup styling if needed */

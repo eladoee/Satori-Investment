@@ -51,6 +51,53 @@ function useAuth() {
   return { user, signIn, loading };
 }
 
+
+// Responsive SVG map that scales with viewBox and preserves original coordinates
+function ResponsiveImageMap({ imageSrc, originalWidth, originalHeight, houses, onHotspotClick }) {
+  if (!originalWidth || !originalHeight) return null;
+  return (
+    <div className="map-wrap">
+      <svg
+        className="svg-map"
+        viewBox={`0 0 ${originalWidth} ${originalHeight}`}
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <image
+          href={imageSrc}
+          x="0"
+          y="0"
+          width={originalWidth}
+          height={originalHeight}
+          preserveAspectRatio="xMidYMid meet"
+        />
+        <g aria-label="hotspots">
+          {houses.map((house) => (
+            <g key={house.unitNumber}>
+              {/* visible path (subtle highlight) */}
+              <path
+                d={house.image_coordinates}
+                className="hotspot-outline"
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="none"
+              />
+              {/* large invisible hit area for easy tapping */}
+              <path
+                d={house.image_coordinates}
+                className="hotspot-hit"
+                onClick={() => onHotspotClick(house.unitNumber)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onHotspotClick(house.unitNumber)}
+              />
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 function AppInner() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedHouse, setSelectedHouse] = useState(null);
@@ -64,6 +111,20 @@ function AppInner() {
     width: 0,
     height: 0,
   });
+
+  const getLocationImage = (name) => {
+    switch (name) {
+      case "Haad Yao":
+        return SatoriHaadYaoAbove;
+      case "Thong Sala Uni":
+        return SatoriThongSalaUniAbove;
+      case "Hin Kong Villas":
+        return SatoriHinKongVillas;
+      default:
+        return SatoriThongSalaUniAbove;
+    }
+  };
+
 
   // This state will store the dynamic prices:
   const [customPrices, setCustomPrices] = useState({
@@ -218,40 +279,7 @@ function AppInner() {
     }
   };
 
-  const adjustCoordinates = (path) => {
-    const { width, height } = imageDimensions;
-    if (!width || !height) return path; // Don't adjust until image is loaded
-
-    const containerWidth = window.innerWidth;
-    const containerHeight = window.innerHeight;
-
-    const scaleX = containerWidth / width;
-    const scaleY = containerHeight / height;
-    const scale = Math.max(scaleX, scaleY);
-
-    const cropOffsetX = (width * scale - containerWidth) / 2 / scale;
-    const cropOffsetY = (height * scale - containerHeight) / 2 / scale;
-
-    // Adjust the coordinates in the SVG path
-    const adjustedPath = path.replace(
-      /([MC])([0-9.,\s]+)/g,
-      (_, command, coords) => {
-        const points = coords
-          .trim()
-          .split(/\s+/)
-          .map((pair) => {
-            const [x, y] = pair.split(",").map(parseFloat);
-            const adjustedX = (x - cropOffsetX) * scale;
-            const adjustedY = (y - cropOffsetY) * scale;
-            return `${adjustedX},${adjustedY}`;
-          });
-
-        return `${command} ${points.join(" ")}`;
-      }
-    );
-
-    return adjustedPath;
-  };
+  /* adjustCoordinates no longer needed (replaced by viewBox scaling) */
 
   // Whenever user changes occupancy or any custom price, recalculate
   useEffect(() => {
@@ -327,19 +355,13 @@ function AppInner() {
       </div>
 
       {selectedLocation && !selectedHouse && (
-        <svg className="svg-overlay" xmlns="http://www.w3.org/2000/svg">
-          {houses.map((house) => (
-            <path
-              key={house.unitNumber}
-              d={adjustCoordinates(house.image_coordinates)}
-              fill="rgba(255, 255, 255, 0.3)"
-              stroke="black"
-              strokeWidth="1"
-              className="clickable-area"
-              onClick={() => handleHouseClick(house.unitNumber)}
-            />
-          ))}
-        </svg>
+        <ResponsiveImageMap
+          imageSrc={getLocationImage(selectedLocation)}
+          originalWidth={imageDimensions.width}
+          originalHeight={imageDimensions.height}
+          houses={houses}
+          onHotspotClick={handleHouseClick}
+        />
       )}
 
       {selectedHouse && (
