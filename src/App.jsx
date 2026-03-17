@@ -22,6 +22,19 @@ import {
 import { getLocationBackground } from "./utils/backgrounds";
 import { convertFromTHB } from "./utils/currency";
 import { fetchExchangeRates } from "./utils/exchangeRates";
+import { safePrice, safeOccupancy } from "./utils/inputGuards";
+import {
+  isConfigModeEnabled,
+  loadConfigOverrides,
+  saveConfigOverrides,
+  clearConfigOverrides,
+  buildHouseOverrideKey,
+  buildTypeOverrideKey,
+  buildLocationDefaultsKey,
+  mergeHouseWithOverrides,
+  mergeTypeWithOverrides,
+  mergeLocationDefaultsWithOverrides,
+} from "./utils/configMode";
 
 import LocationSelector from "./components/LocationSelector";
 import CurrencySelector from "./components/CurrencySelector";
@@ -36,6 +49,14 @@ function AppInner() {
   const [showAlternateResults, setShowAlternateResults] = useState(false);
   const [isShortTerm, setIsShortTerm] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("THB");
+  const [configMode] = useState(isConfigModeEnabled());
+  const [configOverrides, setConfigOverrides] = useState(loadConfigOverrides());
+  const [exchangeRates, setExchangeRates] = useState({
+    THB: 1,
+    EUR: 0.026,
+    USD: 0.029,
+    ILS: 0.107,
+  });
   const [highSeasonOccupancy, setHighSeasonOccupancy] = useState(
     DEFAULT_HIGH_OCCUPANCY
   );
@@ -48,24 +69,35 @@ function AppInner() {
     height: 0,
   });
   const [customPrices, setCustomPrices] = useState({ ...EMPTY_CUSTOM_PRICES });
-  const [exchangeRates, setExchangeRates] = useState({
-  THB: 1,
-  EUR: 0.026,
-  USD: 0.029,
-  ILS: 0.107,
-});
+
+  useEffect(() => {
+    fetchExchangeRates().then(setExchangeRates);
+  }, []);
 
   const selectedLocationData = useMemo(() => {
-    return getSelectedLocationData(houseInventory, selectedLocationId);
-  }, [selectedLocationId]);
+    const baseLocation = getSelectedLocationData(houseInventory, selectedLocationId);
+    if (!baseLocation) return null;
+
+    const locationOverride = configOverrides[buildLocationDefaultsKey(selectedLocationId)] || {};
+    return mergeLocationDefaultsWithOverrides(baseLocation, locationOverride);
+  }, [selectedLocationId, configOverrides]);
 
   const selectedHouseTypeData = useMemo(() => {
-    return getSelectedHouseTypeData(
+    const baseType = getSelectedHouseTypeData(
       houseTypeConfigs,
       selectedLocationId,
       selectedHouse
     );
-  }, [selectedLocationId, selectedHouse]);
+
+    if (!baseType || !selectedHouse) return baseType;
+
+    const typeOverride =
+      configOverrides[
+        buildTypeOverrideKey(selectedLocationId, selectedHouse.typeId)
+      ] || {};
+
+    return mergeTypeWithOverrides(baseType, typeOverride);
+  }, [selectedLocationId, selectedHouse, configOverrides]);
 
   const calculatedData = useMemo(() => {
     if (!selectedHouse || !selectedHouseTypeData) return null;
@@ -99,7 +131,6 @@ function AppInner() {
     const backgroundImage = getLocationBackground(
       selectedLocationData?.displayName
     );
-  
 
     document.body.style.backgroundImage = `url(${backgroundImage})`;
     document.body.style.backgroundSize = "cover";
@@ -115,7 +146,16 @@ function AppInner() {
       });
     };
 
-    setHouses(selectedLocationData?.houses || []);
+    const baseHouses = selectedLocationData?.houses || [];
+    const mergedHouses = baseHouses.map((house) => {
+      const houseOverride =
+        configOverrides[
+          buildHouseOverrideKey(selectedLocationId, house.unitNumber)
+        ] || {};
+      return mergeHouseWithOverrides(house, houseOverride);
+    });
+
+    setHouses(mergedHouses);
     setHighSeasonOccupancy(
       selectedLocationData?.defaults?.highSeasonOccupancy ||
         DEFAULT_HIGH_OCCUPANCY
@@ -124,16 +164,19 @@ function AppInner() {
       selectedLocationData?.defaults?.lowSeasonOccupancy ||
         DEFAULT_LOW_OCCUPANCY
     );
-  }, [selectedLocationData]);
+  }, [selectedLocationData, selectedLocationId, configOverrides]);
 
-  useEffect(() => {
-    fetchExchangeRates().then(setExchangeRates);
-  }, []);
+  const persistOverrides = (next) => {
+    setConfigOverrides(next);
+    saveConfigOverrides(next);
+  };
 
   const updateCustomPrice = (field, value) => {
+    const safeValue = safePrice(value);
+
     setCustomPrices((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: safeValue,
     }));
   };
 
@@ -141,6 +184,12 @@ function AppInner() {
     return convertFromTHB(amount, selectedCurrency, exchangeRates);
   };
 
+  const exitConfigMode = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("config");
+    window.location.href = url.toString();
+  };
+  
   const resetSelectionState = () => {
     setSelectedHouse(null);
     setShowAlternateResults(false);
@@ -172,14 +221,86 @@ function AppInner() {
       return;
     }
 
-    setSelectedHouse(house);
+    const typeOverride =
+      configOverrides[
+        buildTypeOverrideKey(selectedLocationId, house.typeId)
+      ] || {};
 
+    const mergedType = mergeTypeWithOverrides(houseTypeData, typeOverride);
+
+    setSelectedHouse(house);
     setCustomPrices({
       housePrice: house.price,
-      highSeasonNightlyPrice: houseTypeData.pricing.highSeasonAvgNightPrice,
-      lowSeasonNightlyPrice: houseTypeData.pricing.lowSeasonAvgNightPrice,
-      highSeasonMonthlyPrice: houseTypeData.pricing.highSeasonMonthlyPrice,
-      lowSeasonMonthlyPrice: houseTypeData.pricing.lowSeasonMonthlyPrice,
+      highSeasonNightlyPrice: mergedType.pricing.highSeasonAvgNightPrice,
+      lowSeasonNightlyPrice: mergedType.pricing.lowSeasonAvgNightPrice,
+      highSeasonMonthlyPrice: mergedType.pricing.highSeasonMonthlyPrice,
+      lowSeasonMonthlyPrice: mergedType.pricing.lowSeasonMonthlyPrice,
+    });
+  };
+
+  const handleSaveHousePrice = (value) => {
+    updateCustomPrice("housePrice", value);
+
+    if (!configMode || !selectedHouse) return;
+
+    const key = buildHouseOverrideKey(selectedLocationId, selectedHouse.unitNumber);
+    persistOverrides({
+      ...configOverrides,
+      [key]: {
+        ...(configOverrides[key] || {}),
+        price: value,
+      },
+    });
+  };
+
+  const handleSaveTypePricing = (field, value) => {
+    updateCustomPrice(field, value);
+
+    if (!configMode || !selectedHouse) return;
+
+    const key = buildTypeOverrideKey(selectedLocationId, selectedHouse.typeId);
+
+    const pricingFieldMap = {
+      highSeasonNightlyPrice: "highSeasonAvgNightPrice",
+      lowSeasonNightlyPrice: "lowSeasonAvgNightPrice",
+      highSeasonMonthlyPrice: "highSeasonMonthlyPrice",
+      lowSeasonMonthlyPrice: "lowSeasonMonthlyPrice",
+    };
+
+    persistOverrides({
+      ...configOverrides,
+      [key]: {
+        ...(configOverrides[key] || {}),
+        pricing: {
+          ...(configOverrides[key]?.pricing || {}),
+          [pricingFieldMap[field]]: safePrice(value),
+        },
+      },
+    });
+  };
+
+  const handleSaveLocationOccupancy = (field, value) => {
+    const safeValue = safeOccupancy(value);
+
+    if (field === "highSeasonOccupancy") {
+      setHighSeasonOccupancy(safeValue);
+    } else {
+      setLowSeasonOccupancy(safeValue);
+    }
+
+    if (!configMode || !selectedLocationId) return;
+
+    const key = buildLocationDefaultsKey(selectedLocationId);
+
+    persistOverrides({
+      ...configOverrides,
+      [key]: {
+        ...(configOverrides[key] || {}),
+        defaults: {
+          ...(configOverrides[key]?.defaults || {}),
+          [field]: value,
+        },
+      },
     });
   };
 
@@ -202,9 +323,53 @@ function AppInner() {
     setShowAlternateResults(false);
   };
 
+  const handleResetOverrides = () => {
+    const confirmed = window.confirm(
+      "Reset all local config overrides? This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    clearConfigOverrides();
+    setConfigOverrides({});
+    setSelectedHouse(null);
+    setShowAlternateResults(false);
+    setCustomPrices({ ...EMPTY_CUSTOM_PRICES });
+
+    if (selectedLocationData?.defaults) {
+      setHighSeasonOccupancy(
+        selectedLocationData.defaults.highSeasonOccupancy ||
+          DEFAULT_HIGH_OCCUPANCY
+      );
+      setLowSeasonOccupancy(
+        selectedLocationData.defaults.lowSeasonOccupancy ||
+          DEFAULT_LOW_OCCUPANCY
+      );
+    } else {
+      setHighSeasonOccupancy(DEFAULT_HIGH_OCCUPANCY);
+      setLowSeasonOccupancy(DEFAULT_LOW_OCCUPANCY);
+    }
+  };
+
   return (
     <div className="App">
       <h1>Satori Investment Options</h1>
+
+      {configMode && (
+        <div className="config-toolbar">
+          <div className="config-badge">CONFIG MODE</div>
+
+          <div className="config-actions">
+            <button type="button" onClick={exitConfigMode}>
+              Exit Config Mode
+            </button>
+
+            <button type="button" onClick={handleResetOverrides}>
+              Reset Overrides
+            </button>
+          </div>
+        </div>
+      )}
 
       <LocationSelector
         locations={houseInventory.locations}
@@ -237,13 +402,17 @@ function AppInner() {
                 highSeasonOccupancy={highSeasonOccupancy}
                 lowSeasonOccupancy={lowSeasonOccupancy}
                 onHighSeasonNightlyPriceChange={(value) =>
-                  updateCustomPrice("highSeasonNightlyPrice", value)
+                  handleSaveTypePricing("highSeasonNightlyPrice", value)
                 }
                 onLowSeasonNightlyPriceChange={(value) =>
-                  updateCustomPrice("lowSeasonNightlyPrice", value)
+                  handleSaveTypePricing("lowSeasonNightlyPrice", value)
                 }
-                onHighSeasonOccupancyChange={setHighSeasonOccupancy}
-                onLowSeasonOccupancyChange={setLowSeasonOccupancy}
+                onHighSeasonOccupancyChange={(value) =>
+                  handleSaveLocationOccupancy("highSeasonOccupancy", value)
+                }
+                onLowSeasonOccupancyChange={(value) =>
+                  handleSaveLocationOccupancy("lowSeasonOccupancy", value)
+                }
                 onBack={handleDetailsBack}
               />
             ) : (
@@ -253,10 +422,10 @@ function AppInner() {
                 selectedCurrency={selectedCurrency}
                 convertMoney={convertMoney}
                 onHighSeasonMonthlyPriceChange={(value) =>
-                  updateCustomPrice("highSeasonMonthlyPrice", value)
+                  handleSaveTypePricing("highSeasonMonthlyPrice", value)
                 }
                 onLowSeasonMonthlyPriceChange={(value) =>
-                  updateCustomPrice("lowSeasonMonthlyPrice", value)
+                  handleSaveTypePricing("lowSeasonMonthlyPrice", value)
                 }
                 onBack={handleDetailsBack}
               />
@@ -268,9 +437,7 @@ function AppInner() {
               calculatedData={calculatedData}
               selectedCurrency={selectedCurrency}
               convertMoney={convertMoney}
-              onHousePriceChange={(value) =>
-                updateCustomPrice("housePrice", value)
-              }
+              onHousePriceChange={handleSaveHousePrice}
               onOpenShortTerm={handleOpenShortTerm}
               onOpenLongTerm={handleOpenLongTerm}
               onBack={handleHouseBack}

@@ -14,6 +14,39 @@
 }
 
 /* =========================
+   ROI / Config Screen
+========================= */
+
+.config-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.config-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.config-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--color-text-dark);
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+.config-actions button {
+  min-width: 160px;
+}
+
+
+/* =========================
    ROI / Details Views
 ========================= */
 .details-container {
