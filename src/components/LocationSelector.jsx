@@ -11,7 +11,7 @@ export default function LocationSelector({
         onChange={onChange}
         value={selectedLocation}
       >
-        <option value="">--Select a location--</option>
+        <option value="">Projects</option>
         {locations.map((loc) => (
           <option key={loc.locationId} value={loc.locationId}>
             {loc.displayName}
