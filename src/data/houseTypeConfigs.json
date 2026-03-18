@@ -111,6 +111,43 @@
           }
         }
       ]
+    },
+    {
+      "locationId": "tierra-bay",
+      "types": [
+        {
+          "typeId": "tierra-3br-mezz",
+          "displayName": "3 Bedroom",
+          "pricing": {
+            "highSeasonAvgNightPrice": 16000,
+            "lowSeasonAvgNightPrice": 11000,
+            "highSeasonMonthlyPrice": 280000,
+            "lowSeasonMonthlyPrice": 180000
+          },
+          "expenses": {
+            "water": 1500,
+            "electricity": 6000,
+            "internet": 900,
+            "wearAndTear": 3500
+          }
+        },
+        {
+          "typeId": "tierra-2br-mezz",
+          "displayName": "2 Bedrooms",
+          "pricing": {
+            "highSeasonAvgNightPrice": 14000,
+            "lowSeasonAvgNightPrice": 9500,
+            "highSeasonMonthlyPrice": 240000,
+            "lowSeasonMonthlyPrice": 160000
+          },
+          "expenses": {
+            "water": 1200,
+            "electricity": 5000,
+            "internet": 900,
+            "wearAndTear": 3000
+          }
+        }
+      ]
     }
   ]
 }

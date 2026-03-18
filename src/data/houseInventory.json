@@ -3,6 +3,9 @@
     {
       "locationId": "haad-yao",
       "displayName": "Haad Yao",
+      "presentationCoverImage": "/presentations/haad-yao-cover.png",
+      "presentationUrl": "/presentations/tierra-bay.pdf",
+      "presentationLabel": "View Presentation",
       "defaults": {
         "highSeasonOccupancy": 0.8,
         "lowSeasonOccupancy": 0.7,
@@ -125,6 +128,9 @@
     {
       "locationId": "hin-kong-villas",
       "displayName": "Hin Kong Villas",
+      "presentationCoverImage": "/presentations/hin-kong-cover.png",
+      "presentationUrl": "/presentations/hin-kong.pdf",
+      "presentationLabel": "View Presentation",
       "defaults": {
         "highSeasonOccupancy": 0.85,
         "lowSeasonOccupancy": 0.73,
@@ -191,6 +197,51 @@
           "floors": 3,
           "price": 30000000,
           "imageCoordinates": "M 1661.00,605.00 C 1661.00,605.00 2260.50,566.50 2260.50,566.50 2260.50,566.50 2123.07,528.26 2123.07,528.26 2123.07,528.26 2124.74,182.22 2124.74,182.22 2124.74,182.22 2046.17,160.48 2046.17,160.48 2046.17,160.48 2046.17,75.23 2046.17,75.23 2046.17,75.23 1748.60,80.24 1748.60,80.24 1748.60,80.24 1748.60,185.56 1748.60,185.56 1748.60,185.56 1606.00,187.14 1606.00,187.14 1606.00,187.14 1606.00,528.00 1606.00,528.00 1606.00,528.00 1683.00,616.00 1683.00,616.00"
+        }
+      ]
+    },
+    {
+      "locationId": "tierra-bay",
+      "displayName": "Tierra Bay",
+      "presentationCoverImage": "/presentations/tierra-bay-cover.png",
+      "presentationUrl": "/presentations/tierra-bay.pdf",
+      "presentationLabel": "View Presentation",
+      "defaults": {
+        "highSeasonOccupancy": 0.85,
+        "lowSeasonOccupancy": 0.70,
+        "shortTermManagementFee": 0.25,
+        "longTermManagementFee": 0.15
+      },
+      "houses": [
+        {
+          "unitNumber": "01",
+          "typeId": "tierra-3br-mezz",
+          "plotAreaSqm": 532.53,
+          "usableAreaGrossSqm": 179.33,
+          "bedrooms": 3,
+          "floors": 2,
+          "price": 60000000,
+          "imageCoordinates": "M34,1136 L30,923 L179,927 L179,812 L277,812 L277,765 L704,778 L806,855 L934,855 L998,919 L998,1134 Z"
+        },
+        {
+          "unitNumber": "02",
+          "typeId": "tierra-3br-mezz",
+          "plotAreaSqm": 471.39,
+          "usableAreaGrossSqm": 179.33,
+          "bedrooms": 3,
+          "floors": 2,
+          "price": 60000000,
+          "imageCoordinates": "M1067,1153 L1071,859 L1259,855 L1259,821 L1613,833 L1617,906 L1830,906 L1830,961 L1873,966 L1877,1151 Z"
+        },
+        {
+          "unitNumber": "03",
+          "typeId": "tierra-2br-mezz",
+          "plotAreaSqm": 416.89,
+          "usableAreaGrossSqm": 155.27,
+          "bedrooms": 2,
+          "floors": 2,
+          "price": 52000000,
+          "imageCoordinates": "M1873,1145 L1873,970 L1830,970 L1826,897 L1937,846 L2402,863 L2394,925 L2556,925 L2556,1143 Z"
         }
       ]
     }

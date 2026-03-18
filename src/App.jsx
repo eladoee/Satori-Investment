@@ -4,6 +4,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import "./App.css";
 import houseInventory from "./data/houseInventory.json";
 import houseTypeConfigs from "./data/houseTypeConfigs.json";
+import AppHeader from "./components/AppHeader";
+import SelectionToolbar from "./components/SelectionToolbar";
 
 import useAuth, { AUTH_ALLOWED_HD } from "./hooks/useAuth";
 import { calculateROI } from "./utils/calculations";
@@ -19,7 +21,8 @@ import {
   getSelectedHouseTypeData,
   getHouseByUnitNumber,
 } from "./utils/houseData";
-import { getLocationBackground } from "./utils/backgrounds";
+import LocationMapPanel from "./components/LocationMapPanel";
+import PresentationModal from "./components/PresentationModal";
 import { convertFromTHB } from "./utils/currency";
 import { fetchExchangeRates } from "./utils/exchangeRates";
 import { safePrice, safeOccupancy } from "./utils/inputGuards";
@@ -37,8 +40,6 @@ import {
 } from "./utils/configMode";
 
 import LocationSelector from "./components/LocationSelector";
-import CurrencySelector from "./components/CurrencySelector";
-import HouseOverlayMap from "./components/HouseOverlayMap";
 import HouseSummaryView from "./components/HouseSummaryView";
 import ShortTermView from "./components/ShortTermView";
 import LongTermView from "./components/LongTermView";
@@ -64,21 +65,23 @@ function AppInner() {
     DEFAULT_LOW_OCCUPANCY
   );
   const [houses, setHouses] = useState([]);
-  const [imageDimensions, setImageDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
   const [customPrices, setCustomPrices] = useState({ ...EMPTY_CUSTOM_PRICES });
+  const [isPresentationOpen, setIsPresentationOpen] = useState(false);
 
   useEffect(() => {
     fetchExchangeRates().then(setExchangeRates);
   }, []);
 
   const selectedLocationData = useMemo(() => {
-    const baseLocation = getSelectedLocationData(houseInventory, selectedLocationId);
+    const baseLocation = getSelectedLocationData(
+      houseInventory,
+      selectedLocationId
+    );
     if (!baseLocation) return null;
 
-    const locationOverride = configOverrides[buildLocationDefaultsKey(selectedLocationId)] || {};
+    const locationOverride =
+      configOverrides[buildLocationDefaultsKey(selectedLocationId)] || {};
+
     return mergeLocationDefaultsWithOverrides(baseLocation, locationOverride);
   }, [selectedLocationId, configOverrides]);
 
@@ -128,24 +131,6 @@ function AppInner() {
   ]);
 
   useEffect(() => {
-    const backgroundImage = getLocationBackground(
-      selectedLocationData?.displayName
-    );
-
-    document.body.style.backgroundImage = `url(${backgroundImage})`;
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-    document.body.style.backgroundRepeat = "no-repeat";
-
-    const img = new Image();
-    img.src = backgroundImage;
-    img.onload = () => {
-      setImageDimensions({
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-      });
-    };
-
     const baseHouses = selectedLocationData?.houses || [];
     const mergedHouses = baseHouses.map((house) => {
       const houseOverride =
@@ -189,11 +174,12 @@ function AppInner() {
     url.searchParams.delete("config");
     window.location.href = url.toString();
   };
-  
+
   const resetSelectionState = () => {
     setSelectedHouse(null);
     setShowAlternateResults(false);
     setCustomPrices({ ...EMPTY_CUSTOM_PRICES });
+    setIsPresentationOpen(false);
   };
 
   const handleLocationChange = (event) => {
@@ -204,6 +190,14 @@ function AppInner() {
 
   const handleCurrencyChange = (event) => {
     setSelectedCurrency(event.target.value);
+  };
+
+  const openPresentation = () => {
+    setIsPresentationOpen(true);
+  };
+
+  const closePresentation = () => {
+    setIsPresentationOpen(false);
   };
 
   const handleHouseClick = (houseId) => {
@@ -243,7 +237,11 @@ function AppInner() {
 
     if (!configMode || !selectedHouse) return;
 
-    const key = buildHouseOverrideKey(selectedLocationId, selectedHouse.unitNumber);
+    const key = buildHouseOverrideKey(
+      selectedLocationId,
+      selectedHouse.unitNumber
+    );
+
     persistOverrides({
       ...configOverrides,
       [key]: {
@@ -352,41 +350,62 @@ function AppInner() {
   };
 
   return (
-    <div className="App">
-      <h1>Satori Investment Options</h1>
+    <div className="App app-shell-wide">
+      {!selectedLocationId ? (
+        <>
+          <AppHeader />
 
-      {configMode && (
-        <div className="config-toolbar">
-          <div className="config-badge">CONFIG MODE</div>
+          <div className="landing-selector-wrap">
+            <div className="landing-selector-label">Choose a Project</div>
 
-          <div className="config-actions">
-            <button type="button" onClick={exitConfigMode}>
-              Exit Config Mode
-            </button>
-
-            <button type="button" onClick={handleResetOverrides}>
-              Reset Overrides
-            </button>
+            <div className="landing-selector-control">
+              <LocationSelector
+                locations={houseInventory.locations}
+                selectedLocation={selectedLocationId}
+                onChange={handleLocationChange}
+              />
+            </div>
           </div>
-        </div>
+        </>
+      ) : (
+        <>
+          <SelectionToolbar
+            selectedLocationId={selectedLocationId}
+            selectedLocation={selectedLocationId}
+            selectedCurrency={selectedCurrency}
+            onLocationChange={handleLocationChange}
+            onCurrencyChange={handleCurrencyChange}
+            locations={houseInventory.locations}
+            configMode={configMode}
+            showCurrency={!!selectedHouse}
+            showPresentation={
+              !selectedHouse && !!selectedLocationData?.presentationUrl
+            }
+            onPresentationClick={openPresentation}
+          />
+
+          {configMode && (
+            <div className="config-toolbar">
+              <div className="config-actions">
+                <button type="button" onClick={exitConfigMode}>
+                  Exit Config Mode
+                </button>
+
+                <button type="button" onClick={handleResetOverrides}>
+                  Reset Overrides
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
-      <LocationSelector
-        locations={houseInventory.locations}
-        selectedLocation={selectedLocationId}
-        onChange={handleLocationChange}
-      />
-
-      <CurrencySelector
-        selectedCurrency={selectedCurrency}
-        onChange={handleCurrencyChange}
-      />
-
       {selectedLocationId && !selectedHouse && (
-        <HouseOverlayMap
+        <LocationMapPanel
+          locationId={selectedLocationId}
           houses={houses}
-          imageDimensions={imageDimensions}
           onHouseClick={handleHouseClick}
+          configMode={configMode}
         />
       )}
 
@@ -445,6 +464,14 @@ function AppInner() {
           )}
         </div>
       )}
+
+      <PresentationModal
+        isOpen={isPresentationOpen}
+        cover={selectedLocationData?.presentationCoverImage}
+        title={selectedLocationData?.displayName}
+        presentationUrl={selectedLocationData?.presentationUrl}
+        onClose={closePresentation}
+      />
     </div>
   );
 }
